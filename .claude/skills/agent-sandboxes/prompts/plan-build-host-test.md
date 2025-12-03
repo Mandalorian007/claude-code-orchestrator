@@ -14,7 +14,7 @@ WORKFLOW_ID: $2 default "workflow-<hhmmss>+<uuid>" if not provided
 FRONTEND_TOOLING: `vite vue-ts pinia` (static default)
 BACKEND_TOOLING: `astral uv python fast api` (static default)
 DATABASE_TOOLING: `sqlite` (static default)
-TEMPLATE_NAME: `fullstack-vue-fastapi-node22` (pre-built E2B template)
+TEMPLATE_NAME: `fullstack-app-template` (pre-built E2B template)
 PORT: 5173
 SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
 
@@ -49,7 +49,7 @@ SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
 
 1. **Initialize Sandbox**
    - Change to SANDBOX_CLI_PATH directory
-   - Run `uv run sbx init --template fullstack-vue-fastapi-node22 --timeout 43200 --name [WORKFLOW_ID]` to create a new sandbox with the optimized template
+   - Run `uv run sbx init --template fullstack-app-template --timeout 43200 --name [WORKFLOW_ID]` to create a new sandbox with the optimized template
    - The template includes: Node.js 22, uv, Vite 5.4.11, Vue 3, Pinia, TypeScript (all pre-configured and compatible)
    - This stores the WORKFLOW_ID in the sandbox metadata for tracking
    - Capture the sandbox ID from the output (format: `sbx_abc123def456`)
@@ -108,7 +108,7 @@ Provide a comprehensive workflow summary:
 - Frontend: Vite + Vue 3 + TypeScript + Pinia
 - Backend: FastAPI + uvicorn + Python (uv)
 - Database: SQLite
-- Template: fullstack-vue-fastapi-node22
+- Template: fullstack-app-template
 
 ---
 

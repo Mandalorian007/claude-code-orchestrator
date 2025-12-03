@@ -29,7 +29,7 @@ from e2b import Template
 root_dir = Path(__file__).parent.parent.parent.parent
 load_dotenv(root_dir / ".env")
 
-BASE_TEMPLATE_NAME = "fullstack-vue-fastapi-node22"
+BASE_TEMPLATE_NAME = "fullstack-app-template"
 
 # Tier configurations: (cpu_count, memory_mb, description, hourly_cost)
 TIERS = {

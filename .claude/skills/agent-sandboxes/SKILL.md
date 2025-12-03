@@ -57,11 +57,11 @@ Pre-built templates with different resource levels. Use `--template` flag with `
 
 | Template | vCPU | RAM | Cost | Best For |
 |----------|------|-----|------|----------|
-| `fullstack-vue-fastapi-node22` | 2 | 2GB | $0.13/hr | Simple apps (default) |
-| `fullstack-vue-fastapi-node22-lite` | 2 | 4GB | $0.15/hr | Browser tests |
-| `fullstack-vue-fastapi-node22-standard` | 4 | 4GB | $0.27/hr | Parallel builds |
-| `fullstack-vue-fastapi-node22-heavy` | 4 | 8GB | $0.33/hr | Multi-browser |
-| `fullstack-vue-fastapi-node22-max` | 8 | 8GB | $0.44/hr | Fastest |
+| `fullstack-app-template` | 2 | 2GB | $0.13/hr | Simple apps (default) |
+| `fullstack-app-template-lite` | 2 | 4GB | $0.15/hr | Browser tests |
+| `fullstack-app-template-standard` | 4 | 4GB | $0.27/hr | Parallel builds |
+| `fullstack-app-template-heavy` | 4 | 8GB | $0.33/hr | Multi-browser |
+| `fullstack-app-template-max` | 8 | 8GB | $0.44/hr | Fastest |
 
 Build new templates: `uv run build_template.py --tier <tier>` or `--list-tiers` to see options.
 

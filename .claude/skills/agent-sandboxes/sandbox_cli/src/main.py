@@ -77,7 +77,7 @@ def init(template, timeout, env, name):
 
     Examples:
         sbx init
-        sbx init --template fullstack-vue-fastapi-node22 --timeout 43200 --name my-workflow
+        sbx init --template fullstack-app-template --timeout 43200 --name my-workflow
     """
     try:
         from .modules import sandbox as sbx_module
