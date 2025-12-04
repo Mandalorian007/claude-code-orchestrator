@@ -11,11 +11,11 @@ This workflow orchestrates a complete full-stack development cycle in an E2B san
 
 USER_PROMPT: $1
 WORKFLOW_ID: $2 default "workflow-<hhmmss>+<uuid>" if not provided
-FRONTEND_TOOLING: `vite vue-ts pinia` (static default)
-BACKEND_TOOLING: `astral uv python fast api` (static default)
-DATABASE_TOOLING: `sqlite` (static default)
+FRAMEWORK: `next.js 15 app-router typescript` (static default)
+UI_LIBRARY: `shadcn/ui tailwindcss` (static default)
+DATABASE: `sqlite better-sqlite3` (static default)
 TEMPLATE_NAME: `fullstack-app-template` (pre-built E2B template)
-PORT: 5173
+PORT: 3000
 SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
 
 ## Instructions
@@ -50,7 +50,7 @@ SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
 1. **Initialize Sandbox**
    - Change to SANDBOX_CLI_PATH directory
    - Run `uv run sbx init --template fullstack-app-template --timeout 43200 --name [WORKFLOW_ID]` to create a new sandbox with the optimized template
-   - The template includes: Node.js 22, uv, Vite 5.4.11, Vue 3, Pinia, TypeScript (all pre-configured and compatible)
+   - The template includes: Node.js 22 and SQLite (Next.js + Shadcn/ui installed per-project via npm)
    - This stores the WORKFLOW_ID in the sandbox metadata for tracking
    - Capture the sandbox ID from the output (format: `sbx_abc123def456`)
    - Store the sandbox ID in your working memory for use in subsequent steps
@@ -58,38 +58,38 @@ SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
 
 2. **Create Full-Stack Plan**
    - Run `\agent-sandboxes:plan-full-stack [USER_PROMPT]`
-   - Uses the standardized stack: Vite + Vue 3 + TypeScript + Pinia, FastAPI + uv, SQLite
-   - Generates a comprehensive implementation plan with separated frontend/backend/database layers
+   - Uses the standardized stack: Next.js 15 (App Router) + Shadcn/ui + Tailwind + SQLite
+   - Generates a comprehensive implementation plan for a unified full-stack Next.js application
    - Captures the path to the generated plan file in specs/ directory
    - Store the path as `path_to_plan` for the next step
 
 3. **Build Application in Sandbox**
    - Run `\build [path_to_plan]`
-   - This implements the full-stack application in the E2B sandbox following the plan
+   - This implements the full-stack Next.js application in the E2B sandbox following the plan
    - All work happens in the sandbox using the sandbox ID from step 1
-   - Frontend and backend are set up with proper dependencies
-   - Make sure the frontend is visually appealing and functional. Avoid color combinations that make the text hard to read.
+   - Next.js app is set up with proper dependencies (Shadcn/ui, better-sqlite3, etc.)
+   - Make sure the UI is visually appealing and functional. Avoid color combinations that make the text hard to read.
    - Database schema is initialized
    - All validation commands from the plan are executed
    - Store the build completion status for reporting
-   - IMPORTANT: Update the title of the html page your working on to begin with your `WORKFLOW_ID` so we can give you credit for your work.
-   - IMPORTANT: As you wrap up this step, be sure to document how to run the frontend, backend, and database in the README.md at the top of your application directory. This will tell future agents and engineers how to run your application. Keep it concise, describe the app, describe requirements, and describe the setup steps to run it, but don't get too verbose. Keep it less than 100 lines.
+   - IMPORTANT: Update the title of the page to begin with your `WORKFLOW_ID` so we can give you credit for your work.
+   - IMPORTANT: As you wrap up this step, be sure to document how to run the application in the README.md at the top of your application directory. This will tell future agents and engineers how to run your application. Keep it concise, describe the app, describe requirements, and describe the setup steps to run it, but don't get too verbose. Keep it less than 100 lines.
 
 4. **Host and Expose Application**
    - Run `\host [sandbox_id] [PORT]`
-   - This sets up client and server applications in the sandbox
-   - Starts the server in background mode on PORT
+   - This starts the Next.js application in the sandbox
+   - Starts the server in background mode on PORT (`npm run dev` or `npm run start`)
    - Retrieves the public URL using `sbx sandbox get-host`
    - Validates the application is accessible with curl
    - Store the public URL for the final report
-   - Use this as an opportunity to test the application from the outside sandbox.
-   - Remember we have to able to access the client and the server from the exposed public URL that you'll build from the get-host command. That means you may have to configure your host settings, to allow for the **frontend** and **backend** api to be accessible from the outside. This is where iterating and testing is critical.
+   - Use this as an opportunity to test the application from outside the sandbox.
+   - You may need to configure next.config.js to bind to 0.0.0.0 for external access. This is where iterating and testing is critical.
    - IMPORTANT: Be sure you run your final test from OUTSIDE the sandbox to validate the user's access to the application.
 
 5. **Final Testing & Validation**
    - Run `\agent-sandboxes:test [sandbox_id] [public_url] [path_to_plan] [WORKFLOW_ID]`
-   - This performs comprehensive validation of database, backend (internal + external), frontend (internal + external), end-to-end integration, and browser UI testing
-   - Browser UI Testing executes all user story workflows from the plan's `### 7. Browser UI Testing` section
+   - This performs comprehensive validation of database, API routes (internal + external), pages, end-to-end integration, and browser UI testing
+   - Browser UI Testing executes all user story workflows from the plan's `### 6. Browser UI Testing` section
    - CRITICAL: All tests must pass before proceeding to report
    - If any test fails, the test command will provide specific debugging guidance
    - Re-run the test command after fixes until all validations pass
@@ -105,9 +105,9 @@ Provide a comprehensive workflow summary:
 
 **Application Request**: [USER_PROMPT summary]
 **Technology Stack**:
-- Frontend: Vite + Vue 3 + TypeScript + Pinia
-- Backend: FastAPI + uvicorn + Python (uv)
-- Database: SQLite
+- Framework: Next.js 15 (App Router) + TypeScript
+- UI: Shadcn/ui + Tailwind CSS
+- Database: SQLite (better-sqlite3)
 - Template: fullstack-app-template
 
 ---
@@ -133,8 +133,8 @@ Provide a comprehensive workflow summary:
 **Sandbox ID**: [SANDBOX_ID]
 **Files Modified**: [count from build report]
 **Key Changes**:
-- [Frontend setup and implementation summary]
-- [Backend API and services summary]
+- [Next.js app setup and page implementation summary]
+- [API routes and data operations summary]
 - [Database schema and models summary]
 - [Validation status: all tests passed]
 
@@ -142,15 +142,15 @@ Provide a comprehensive workflow summary:
 
 ### Step 4: Host ✅
 **Public URL**: [url-from-get-host]
-**Port**: 5173
+**Port**: 3000
 **Status**: Application is live and accessible
 
 ---
 
 ### Step 5: Validation ✅
 **Database**: ✅ Tables verified, queries successful
-**Backend**: ✅ All endpoints tested (internal + external), CORS configured
-**Frontend**: ✅ Build succeeded, page loads, assets served
+**API Routes**: ✅ All endpoints tested (internal + external)
+**Build**: ✅ `npm run build` succeeded, page loads, assets served
 **Integration**: ✅ End-to-end user flow validated
 **Browser UI Testing**: ✅ All user story workflows from plan passed
 

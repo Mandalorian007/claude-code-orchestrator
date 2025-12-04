@@ -8,8 +8,8 @@
 # ///
 
 """
-Build full-stack template - optimized for Vite + Vue + TypeScript + Pinia frontend,
-FastAPI backend, and SQLite database with Node.js 22 and uv pre-installed.
+Build full-stack template - optimized for Next.js + Shadcn/ui + SQLite
+with Node.js 22 pre-installed.
 
 Supports 5 resource tiers:
   --tier super-lite  (default) 2 vCPU / 2GB  - Simple apps, sequential tasks
@@ -82,8 +82,8 @@ def build_template(tier: str, list_tiers: bool):
         template_name = f"{BASE_TEMPLATE_NAME}-{tier}"
 
     print("=== Building Full-Stack Template ===\n")
-    print("Stack: Vite + Vue 3 + TypeScript + Pinia + FastAPI + SQLite")
-    print("Optimizations: Node.js 22, uv, compatible Vite 5.x\n")
+    print("Stack: Next.js 15 + Shadcn/ui + Tailwind + SQLite")
+    print("Optimizations: Node.js 22, SQLite CLI pre-installed\n")
 
     print(f"⚙️  Resource Tier: {tier}")
     print(f"   • vCPU: {cpu_count}")
@@ -97,10 +97,6 @@ def build_template(tier: str, list_tiers: bool):
         Template()
         .from_node_image("22")  # Start with Node.js 22 base image (globally available)
         .apt_install(["sqlite3"])  # Install SQLite3 CLI for database operations
-        .run_cmd("curl -LsSf https://astral.sh/uv/install.sh | sh")  # Install uv
-        .run_cmd(
-            "sudo ln -sf /home/user/.local/bin/uv /usr/local/bin/uv"
-        )  # Global uv access
         # Verify tools are installed correctly
         .run_cmd("node --version && npm --version && sqlite3 --version")
     )
@@ -111,9 +107,8 @@ def build_template(tier: str, list_tiers: bool):
     print("     - Node.js 22.x (globally available as default)")
     print("     - npm (pre-installed with Node.js)")
     print("     - sqlite3 (CLI for database operations)")
-    print("     - uv (Python package manager, globally accessible)")
     print("")
-    print("   Note: Projects will install their own dependencies via npm install")
+    print("   Note: Next.js + Shadcn installed per-project via npx/npm")
     print("   This ensures version consistency and proper node_modules structure")
 
     # Build the template
@@ -134,12 +129,10 @@ def build_template(tier: str, list_tiers: bool):
         print(f"   • Node.js 22.x (globally available)")
         print(f"   • npm (latest for Node.js 22)")
         print(f"   • sqlite3 (CLI for database operations)")
-        print(f"   • uv (Python package manager)")
         print(f"\n🚀 Benefits:")
-        print(f"   • Node.js 22 eliminates Vite 7 compatibility issues")
+        print(f"   • Node.js 22 for Next.js 15 compatibility")
         print(f"   • SQLite3 CLI ready for database creation/debugging")
-        print(f"   • Projects install their own dependencies (proper version control)")
-        print(f"   • uv + sqlite3 pre-installed saves ~45 seconds per build")
+        print(f"   • Next.js + Shadcn installed per-project via npm")
         print(f"   • Consistent, tested environment")
         print(f"   • Template builds in ~2-3 minutes (minimal, focused setup)")
         print(f"\n💰 Cost Estimate:")

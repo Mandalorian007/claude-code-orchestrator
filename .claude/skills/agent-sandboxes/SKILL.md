@@ -57,7 +57,7 @@ Pre-built templates with different resource levels. Use `--template` flag with `
 
 | Template | vCPU | RAM | Cost | Best For |
 |----------|------|-----|------|----------|
-| `fullstack-app-template` | 2 | 2GB | $0.13/hr | Simple apps (default) |
+| `fullstack-app-template` | 2 | 2GB | $0.13/hr | Simple Next.js apps (default) |
 | `fullstack-app-template-lite` | 2 | 4GB | $0.15/hr | Browser tests |
 | `fullstack-app-template-standard` | 4 | 4GB | $0.27/hr | Parallel builds |
 | `fullstack-app-template-heavy` | 4 | 8GB | $0.33/hr | Multi-browser |
@@ -292,14 +292,14 @@ uv run sbx exec <sandbox_id> "/home/user/.local/bin/uv pip install --system requ
 
 #### 4.1: Start the Server
 
-**Always default to port 5173** and ensure your frontend is configured to use this port:
+Ensure your frontend is configured to use the appropriate port:
 
 ```bash
+# For Next.js (defaults to port 3000)
+uv run sbx exec <sandbox_id> "npm run dev" --background --cwd /home/user/project
+
 # For Python/Flask
 uv run sbx exec <sandbox_id> "python -m http.server 5173" --background --cwd /home/user/project
-
-# For Node/React (Vite)
-uv run sbx exec <sandbox_id> "npm run dev -- --port 5173" --background --cwd /home/user/project
 
 # For static HTML/CSS/JS
 uv run sbx exec <sandbox_id> "python -m http.server 5173" --background --cwd /home/user/dist
@@ -311,7 +311,7 @@ uv run sbx exec <sandbox_id> "python /home/user/server.py" --background
 
 **Key points**:
 - Use `--background` flag to keep server running
-- **Port 5173 is the default** - use this unless you have a specific reason not to
+- **Next.js uses port 3000** by default, other frameworks typically use 5173
 - Ensure your frontend code is configured for the same port
 
 #### 4.2: Get the Exposed URL

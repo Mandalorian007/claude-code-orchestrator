@@ -19,7 +19,7 @@ Watch the [Gemini 3 Demo](https://youtu.be/V5IhsHEHXOg) or the newer [Claude Opu
 ## 🚀 Features
 
 *   **Isolated Execution**: Run untrusted code, tests, and binaries safely.
-*   **Full-Stack Development**: Scaffold, build, and host Vue + FastAPI + SQLite apps.
+*   **Full-Stack Development**: Scaffold, build, and host Next.js + Shadcn/ui + SQLite apps.
 *   **Browser Automation**: Built-in Playwright integration for visual validation.
 *   **Agent-First Design**: Optimized for CLI agents with structured prompts and robust error handling.
 *   **Persistent Context**: Tools to manage sandbox lifecycles across agent turns.
