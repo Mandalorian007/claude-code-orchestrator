@@ -118,7 +118,7 @@ Options:
 
 ### Key Command: `sbx browser`
 
-Browser automation for visual validation of sandbox applications using Playwright's isolated Chromium.
+Browser automation for visual validation of sandbox applications using Playwright's isolated Chromium. Runs on your **local machine**, not in the sandbox. Uses Playwright's isolated Chromium—does not interfere with your Chrome browser.
 
 **Commands** (all support `--port PORT` for parallel agents):
 ```bash
@@ -129,14 +129,31 @@ sbx browser eval <code>                 # Run JavaScript, returns result
 sbx browser screenshot [--path P] [--full]  # Screenshot (--full for entire page)
 sbx browser click <selector>            # Click element by CSS selector
 sbx browser type <selector> <text>      # Type text into input field
+sbx browser press <key>                 # Press key (Tab, Enter, Escape, etc.)
 sbx browser scroll <direction>          # up | down | top | bottom
-sbx browser a11y                        # Get accessibility tree (JSON)
-sbx browser dom [--full]                # Get DOM (--full for raw HTML)
+sbx browser a11y                        # Get accessibility tree - best for understanding page structure
+sbx browser dom [--full]                # Get simplified DOM (--full for raw HTML)
 sbx browser status                      # Check if browser is running
 sbx browser close                       # Close browser and kill process
 ```
 
-**For parallel agents**: Use `--port` flag with unique ports (9222-9999).
+**For parallel agents**: Use `--port` flag with unique ports (9222-9999). Each agent MUST use a unique port and close only its own browser.
+
+**Common patterns**:
+```bash
+# Form interaction
+uv run sbx browser type "#username" "testuser" --port $PORT
+uv run sbx browser type "#password" "testpass" --port $PORT
+uv run sbx browser click "#submit-button" --port $PORT
+
+# Data extraction
+uv run sbx browser eval "Array.from(document.querySelectorAll('a')).map(a => a.textContent)" --port $PORT
+uv run sbx browser eval "Array.from(document.querySelectorAll('.item')).map(el => ({title: el.querySelector('h2')?.textContent, price: el.querySelector('.price')?.textContent}))" --port $PORT
+
+# Keyboard navigation
+uv run sbx browser press Tab --port $PORT
+uv run sbx browser press Enter --port $PORT
+```
 
 ### Key Command: `sbx git`
 
@@ -239,15 +256,6 @@ uv run sbx init
 uv run sbx exec sbx_abc123def456 "python --version"
 uv run sbx files write sbx_abc123def456 /home/user/test.py "print('hello')"
 ```
-
-## Cookbook
-
-Extended documentation for specific features. **Read these when you need to use the feature.**
-
-| Feature            | When to Read                                                           | Documentation                              |
-| ------------------ | ---------------------------------------------------------------------- | ------------------------------------------ |
-| Browser Automation | When validating UIs, taking screenshots, or interacting with web pages | [cookbook/browser.md](cookbook/browser.md) |
-
 
 ## Workflow
 
@@ -538,7 +546,21 @@ For complete command reference and advanced usage, see:
 - Use `uv run sbx --help` to see command structure
 - Each command group has detailed help with examples
 
-**Browser issues**: See [cookbook/browser.md](cookbook/browser.md) for troubleshooting.
+**"Browser environment not initialized"**:
+- Run `uv run sbx browser init` to install Playwright and Chromium
+
+**"Could not connect to Chromium on port XXXX"**:
+- Start browser first: `uv run sbx browser start --port XXXX`
+
+**"Port XXXX is already in use"**:
+- Use different port, or close existing: `uv run sbx browser close --port XXXX`
+
+**"Failed to start browser"**:
+- Re-run `uv run sbx browser init`
+- Kill stale processes: `pkill -f "chromium.*remote-debugging"`
+
+**Multiple browser agents failing**:
+- Each agent MUST use a unique port (9222-9999)
 
 **"Git clone failed" or "Authentication failed"**:
 - Check `GH_TOKEN` is set in `.env` file
