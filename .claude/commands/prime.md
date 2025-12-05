@@ -6,8 +6,8 @@ Follow the `Workflow` to understand the codebase and instructions then report yo
 
 @README.md
 @.claude/skills/agent-sandboxes/SKILL.md
-@.claude/skills/agent-sandboxes/sandbox_cli/src/main.py
-@.claude/skills/agent-sandboxes/prompts
+@.claude/skills/playwright/SKILL.md
+@.claude/commands/workflow/
 !`git ls-files`
 
 ## Report
