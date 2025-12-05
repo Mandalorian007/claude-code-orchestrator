@@ -45,7 +45,7 @@ def cli():
     Tip: For multi-agent workflows, capture the sandbox ID in your context
     and use it directly in commands (avoid shell variables for safety).
 
-    Git: Set GH_TOKEN in .env for automatic GitHub authentication.
+    Git: GH_TOKEN from .env provides automatic GitHub authentication.
     """
     pass
 

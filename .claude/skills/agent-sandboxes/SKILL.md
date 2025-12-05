@@ -10,34 +10,25 @@ This skill provides access to E2B sandboxes through a streamlined CLI for safe c
 ## Variables
 
 - **E2B_API_KEY**: The environment variable containing the E2B API key (stored in the environment file)
-- **GH_TOKEN**: GitHub Personal Access Token for cloning private repositories (optional, stored in the environment file)
+- **GH_TOKEN**: GitHub Personal Access Token for repo operations (stored in the environment file)
 - **SANDBOX_CLI_PATH**: `.claude/skills/agent-sandboxes/sandbox_cli/`
 - **ENVIRONMENT_FILE_PATH**: `../../../../.env`
 - **TIMEOUT_DURATION_IN_SECONDS**: `3600` (1 hour)
 
 ## Prerequisites
 
-Before using sandbox operations, **validate the environment**:
+Before using sandbox operations, **validate the environment** by running `/setup`. This checks:
+- E2B_API_KEY is set in `.env`
+- GH_TOKEN is set in `.env`
+- Skill prompts are linked to commands
 
-1. **Check for E2B_API_KEY**:
-   ```bash
-   # Verify the API key is set
-   grep "E2B_API_KEY" `ENVIRONMENT_FILE_PATH`
-   ```
+If setup reports missing variables, instruct the user to add them to `.env`:
+```
+E2B_API_KEY=sbx_...     # Get from https://e2b.dev/dashboard/keys
+GH_TOKEN=ghp_...        # GitHub PAT for repo operations
+```
 
-   If missing, instruct the user:
-   ```
-   Error: E2B_API_KEY not found in .env file
-
-   Please add your E2B API key to the .env file in the project root:
-   echo "E2B_API_KEY=your_api_key_here" >> .env
-
-   Get your API key from: https://e2b.dev/docs
-   ```
-
-2. **Verify CLI is available**:
-   The sandbox CLI is located at `SANDBOX_CLI_PATH`
-   The `.env` file is automatically loaded from the project root.
+The sandbox CLI is located at `SANDBOX_CLI_PATH` and automatically loads `.env` from the project root.
 
 ## Instructions
 
@@ -261,14 +252,7 @@ uv run sbx files write sbx_abc123def456 /home/user/test.py "print('hello')"
 
 ### Step 1: Validate Environment
 
-Always start by checking for the E2B_API_KEY:
-
-```bash
-cd SANDBOX_CLI_PATH
-grep "E2B_API_KEY" `ENVIRONMENT_FILE_PATH`
-```
-
-If not found, stop and request the user to add their API key.
+If environment hasn't been validated, run `/setup` first. If setup reports missing E2B_API_KEY, stop and request the user to add it to `.env`.
 
 ### Step 2: Initialize Sandbox and Capture ID
 
@@ -526,9 +510,9 @@ For complete command reference and advanced usage, see:
 - All commands have built-in help documentation
 
 **"E2B_API_KEY not found"**:
-- Check `.env` file exists in project root
-- Verify key is set: `grep E2B_API_KEY .env`
-- Add key if missing: `echo "E2B_API_KEY=key" >> .env`
+- Run `/setup` to validate environment
+- Add key to `.env` if missing: `E2B_API_KEY=sbx_...`
+- Get your key from: https://e2b.dev/dashboard/keys
 
 **"Command not found: sbx"**:
 - Ensure you're in the sandbox_cli directory
@@ -563,7 +547,6 @@ For complete command reference and advanced usage, see:
 - Each agent MUST use a unique port (9222-9999)
 
 **"Git clone failed" or "Authentication failed"**:
-- Check `GH_TOKEN` is set in `.env` file
-- Verify token has `repo` scope for private repositories
+- Run `/setup` to verify `GH_TOKEN` is set in `.env`
+- Verify token has `repo` scope for repository access
 - Ensure the token hasn't expired
-- For public repos, `GH_TOKEN` is not required

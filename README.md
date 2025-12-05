@@ -30,7 +30,7 @@ A toolkit for Claude Code to orchestrate isolated [E2B sandbox](https://e2b.dev/
    E2B_API_KEY=sbx_...
    ```
 
-3. **(Optional) Add GitHub token** for private repo cloning:
+3. **Add GitHub token** for repo operations:
    ```
    GH_TOKEN=ghp_...
    ```
@@ -81,7 +81,7 @@ uv run sbx files read <sandbox_id> /home/user/output.txt
 # Expose a port and get public URL
 uv run sbx sandbox get-host <sandbox_id> --port 3000
 
-# Git operations (auto-authenticated if GH_TOKEN set)
+# Git operations (auto-authenticated with GH_TOKEN)
 uv run sbx git clone <sandbox_id> https://github.com/user/repo.git
 ```
 
