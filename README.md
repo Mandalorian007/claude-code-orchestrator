@@ -109,8 +109,7 @@ Pre-built templates with different resource levels:
 
 ## Documentation
 
-- [Skill Guide](.claude/skills/agent-sandboxes/SKILL.md) - Full skill documentation
-- [CLI Reference](.claude/skills/agent-sandboxes/sandbox_cli/README.md) - Detailed CLI usage
+- [Skill Guide](.claude/skills/agent-sandboxes/SKILL.md) - Full skill and CLI documentation
 - [E2B Docs](https://e2b.dev/docs) - E2B platform documentation
 
 ## Credits
