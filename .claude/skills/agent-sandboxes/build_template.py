@@ -97,18 +97,19 @@ def build_template(tier: str, list_tiers: bool):
         Template()
         .from_node_image("22")  # Start with Node.js 22 base image (globally available)
         .apt_install(["sqlite3"])  # Install SQLite3 CLI for database operations
+        .run_cmd("npm install -g pnpm")  # Install pnpm globally
         # Verify tools are installed correctly
-        .run_cmd("node --version && npm --version && sqlite3 --version")
+        .run_cmd("node --version && pnpm --version && sqlite3 --version")
     )
 
     print(f"   ✓ Template defined: {template_name}")
     print("   Base: Node.js 22 (from official E2B Node.js 22 image)")
     print("   Tools installed:")
     print("     - Node.js 22.x (globally available as default)")
-    print("     - npm (pre-installed with Node.js)")
+    print("     - pnpm (installed globally)")
     print("     - sqlite3 (CLI for database operations)")
     print("")
-    print("   Note: Next.js + Shadcn installed per-project via npx/npm")
+    print("   Note: Next.js + Shadcn installed per-project via pnpm/pnpx")
     print("   This ensures version consistency and proper node_modules structure")
 
     # Build the template
@@ -127,12 +128,12 @@ def build_template(tier: str, list_tiers: bool):
         print(f"   sbx init --template {template_name}")
         print(f"\n📦 Pre-installed tools:")
         print(f"   • Node.js 22.x (globally available)")
-        print(f"   • npm (latest for Node.js 22)")
+        print(f"   • pnpm (installed globally)")
         print(f"   • sqlite3 (CLI for database operations)")
         print(f"\n🚀 Benefits:")
         print(f"   • Node.js 22 for Next.js 15 compatibility")
         print(f"   • SQLite3 CLI ready for database creation/debugging")
-        print(f"   • Next.js + Shadcn installed per-project via npm")
+        print(f"   • Next.js + Shadcn installed per-project via pnpm")
         print(f"   • Consistent, tested environment")
         print(f"   • Template builds in ~2-3 minutes (minimal, focused setup)")
         print(f"\n💰 Cost Estimate:")

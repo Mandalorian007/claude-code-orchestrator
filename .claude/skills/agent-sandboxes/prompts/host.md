@@ -24,7 +24,7 @@ PORT: $2 default 3000 if not provided
 ## Workflow
 
 1. **Set Up Application** - Install dependencies and configure the Next.js app in the sandbox
-2. **Start Server** - Launch the web server in background on the specified port (`npm run dev` or `npm run start`)
+2. **Start Server** - Launch the web server in background on the specified port (`pnpm dev` or `pnpm start`)
 3. **Get Public URL** - Use `sbx sandbox get-host SANDBOX_ID --port PORT` to retrieve the authoritative public URL
 4. **Validate** - Test the URL with `curl` OUTSIDE of the sandbox to verify the application is accessible and responding
    - This is a great opportunity to test the application from the outside in, as a user would by using `curl` to verify the application is accessible and responding. Test all endpoints you created in the plan. If something isn't working, fix it before stopping.

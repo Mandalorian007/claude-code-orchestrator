@@ -36,7 +36,7 @@ BROWSER_UI_TESTING_SCREENSHOT_PATH: `temp/<WORKFLOW_ID>/ui-testing/`
    - Store initial row counts for later comparison
 
 2. **Build Validation**
-   - Run Next.js build: `sbx exec [SANDBOX_ID] "npm run build"`
+   - Run Next.js build: `sbx exec [SANDBOX_ID] "pnpm build"`
    - Verify build succeeds with no errors
    - Check for TypeScript errors
    - Verify .next/ folder is generated
@@ -113,7 +113,7 @@ Present validation results in this format:
 ---
 
 ### ✅ Build Validation
-- **Build**: ✅ `npm run build` succeeded with no errors
+- **Build**: ✅ `pnpm build` succeeded with no errors
 - **TypeScript**: ✅ No type errors
 - **Assets**: ✅ .next/ folder generated correctly
 - **Status**: PASSED

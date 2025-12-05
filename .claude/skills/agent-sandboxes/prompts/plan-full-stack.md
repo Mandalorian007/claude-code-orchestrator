@@ -24,7 +24,7 @@ BROWSER_UI_TESTING_TOTAL_WORKFLOWS: 3-5 (static default)
 - Determine the task type (chore|feature|refactor|fix|enhancement) and complexity (simple|medium|complex).
 - Use the standardized stack: **Next.js 15 (App Router) + TypeScript + Shadcn/ui + Tailwind CSS** with **SQLite (better-sqlite3)** for persistence. This is a unified full-stack framework—no separate backend process needed.
 - Think deeply (ultrathink) about architecture, data flow, and component structure. Next.js API routes handle backend logic in the same codebase.
-- Include a dependencies section detailing required packages (with `npm` or `npx` commands).
+- Include a dependencies section detailing required packages (with `pnpm` or `pnpx` commands).
 - Define how to test API routes, components, and database operations. Assume the agent has already run the application once so we know the scaffold works; testing should include real runs, not hypothetical steps.
 - Follow the Plan Format below to create a comprehensive implementation plan, saving it to `PLAN_OUTPUT_DIRECTORY/<descriptive-name>.md`.
 - Generate a descriptive, kebab-case filename based on the main topic of the plan.
@@ -97,18 +97,18 @@ lib/
 ### Dependencies
 ```bash
 # Create Next.js app with TypeScript and Tailwind
-npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*"
+pnpm create next-app@latest . --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*"
 
 # Add Shadcn/ui
-npx shadcn@latest init
-npx shadcn@latest add button card input label table dialog
+pnpm dlx shadcn@latest init
+pnpm dlx shadcn@latest add button card input label table dialog
 
 # Add SQLite
-npm install better-sqlite3
-npm install -D @types/better-sqlite3
+pnpm add better-sqlite3
+pnpm add -D @types/better-sqlite3
 
 # Add any additional dependencies
-npm install <other-deps>
+pnpm add <other-deps>
 ```
 
 <if complexity is medium/complex, include this section:>
@@ -129,11 +129,11 @@ IMPORTANT: Execute every step in order, top to bottom.
 <list step by step tasks as h3 headers with bullet points>
 
 ### 1. Bootstrap & Verify Stack
-- Create Next.js app: `npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*"`
-- Initialize Shadcn/ui: `npx shadcn@latest init` (select defaults)
-- Add required Shadcn components: `npx shadcn@latest add button card input ...`
-- Install SQLite: `npm install better-sqlite3 && npm install -D @types/better-sqlite3`
-- Run dev server to verify: `npm run dev`
+- Create Next.js app: `pnpm create next-app@latest . --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*"`
+- Initialize Shadcn/ui: `pnpm dlx shadcn@latest init` (select defaults)
+- Add required Shadcn components: `pnpm dlx shadcn@latest add button card input ...`
+- Install SQLite: `pnpm add better-sqlite3 && pnpm add -D @types/better-sqlite3`
+- Run dev server to verify: `pnpm dev`
 
 ### 2. Database Setup
 - Create `lib/db.ts` with SQLite connection
@@ -155,7 +155,7 @@ IMPORTANT: Execute every step in order, top to bottom.
 
 ### 5. Testing & Verification
 - Test all API routes: `curl http://localhost:3000/api/...`
-- Run build to check for errors: `npm run build`
+- Run build to check for errors: `pnpm build`
 - Verify full user flows work end-to-end
 
 <if task_type is feature or complexity is medium/complex, include this section:>
@@ -220,13 +220,13 @@ Execute these commands to validate the task is complete:
 
 ```bash
 # Build the application (catches TypeScript and build errors)
-npm run build
+pnpm build
 
 # Start production server
-npm run start
+pnpm start
 
 # Or run dev server
-npm run dev
+pnpm dev
 
 # Test API endpoints
 curl http://localhost:3000/api/[resource]

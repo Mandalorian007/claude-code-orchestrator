@@ -367,7 +367,7 @@ uv run sbx exec <sandbox_id> "/home/user/.local/bin/uv pip install --system requ
 Start the Next.js development server:
 
 ```bash
-uv run sbx exec <sandbox_id> "npm run dev" --background --cwd /home/user/project
+uv run sbx exec <sandbox_id> "pnpm dev" --background --cwd /home/user/project
 ```
 
 **Key points**:

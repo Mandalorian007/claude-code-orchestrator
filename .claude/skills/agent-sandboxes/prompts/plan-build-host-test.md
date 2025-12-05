@@ -51,7 +51,7 @@ WORKFLOW_OUTPUT_PATH: `temp/<WORKFLOW_ID>/`
 1. **Initialize Sandbox**
    - Change to SANDBOX_CLI_PATH directory
    - Run `uv run sbx init --template fullstack-app-template --name [WORKFLOW_ID]` to create a new sandbox with the optimized template (default timeout: 1 hour)
-   - The template includes: Node.js 22 and SQLite (Next.js + Shadcn/ui installed per-project via npm)
+   - The template includes: Node.js 22, pnpm, and SQLite (Next.js + Shadcn/ui installed per-project via pnpm)
    - This stores the WORKFLOW_ID in the sandbox metadata for tracking
    - Capture the sandbox ID from the output (format: `sbx_abc123def456`)
    - Store the sandbox ID in your working memory for use in subsequent steps
@@ -79,7 +79,7 @@ WORKFLOW_OUTPUT_PATH: `temp/<WORKFLOW_ID>/`
 4. **Host and Expose Application**
    - Run `/agent-sandboxes:host [sandbox_id] [PORT]`
    - This starts the Next.js application in the sandbox
-   - Starts the server in background mode on PORT (`npm run dev` or `npm run start`)
+   - Starts the server in background mode on PORT (`pnpm dev` or `pnpm start`)
    - Retrieves the public URL using `sbx sandbox get-host`
    - Validates the application is accessible with curl
    - Store the public URL for the final report
@@ -151,7 +151,7 @@ Provide a comprehensive workflow summary:
 ### Step 5: Validation ✅
 **Database**: ✅ Tables verified, queries successful
 **API Routes**: ✅ All endpoints tested (internal + external)
-**Build**: ✅ `npm run build` succeeded, page loads, assets served
+**Build**: ✅ `pnpm build` succeeded, page loads, assets served
 **Integration**: ✅ End-to-end user flow validated
 **Browser UI Testing**: ✅ All user story workflows from plan passed
 
