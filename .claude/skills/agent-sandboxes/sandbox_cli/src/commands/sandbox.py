@@ -19,7 +19,7 @@ def sandbox():
 
 @sandbox.command()
 @click.option("--template", "-t", default=None, help="Sandbox template name or ID")
-@click.option("--timeout", default=300, help="Sandbox timeout in seconds")
+@click.option("--timeout", default=3600, help="Sandbox timeout in seconds (default: 1 hour)")
 @click.option("--env", "-e", multiple=True, help="Environment variables (KEY=VALUE)")
 @click.option("--metadata", "-m", multiple=True, help="Metadata (KEY=VALUE)")
 @click.option("--auto-pause", is_flag=True, help="Enable auto-pause (beta)")
@@ -105,7 +105,7 @@ def kill(sandbox_id):
         raise click.Abort()
 
 
-def _build_default_public_url(sandbox_id: str, port: int = 5173) -> str:
+def _build_default_public_url(sandbox_id: str, port: int = 3000) -> str:
     """Build the default public URL for a sandbox."""
     return f"https://{port}-{sandbox_id}.e2b.dev"
 
@@ -299,7 +299,7 @@ def status(sandbox_id):
 
 @sandbox.command(name="get-host")
 @click.argument("sandbox_id")
-@click.option("--port", "-p", required=True, type=int, help="Port number to expose (e.g., 5173 for Vite)")
+@click.option("--port", "-p", required=True, type=int, help="Port number to expose (e.g., 3000 for Next.js)")
 def get_host(sandbox_id, port):
     """Get public hostname for an exposed port."""
     try:

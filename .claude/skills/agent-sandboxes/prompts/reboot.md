@@ -10,7 +10,7 @@ Upload a local application directory to a new E2B sandbox, read the README to un
 ## Variables
 
 APP_LOCAL_DIR: $ARGUMENTS
-SANDBOX_TIMEOUT: 43200 (static default)
+SANDBOX_TIMEOUT: 3600 (1 hour, default)
 
 ## Instructions
 
@@ -21,7 +21,7 @@ SANDBOX_TIMEOUT: 43200 (static default)
 
 1. **Activate Skill** - Activate the agent sandbox skill (`.claude/skills/agent-sandboxes/SKILL.md`)
 
-2. **Create Sandbox** - `uv run sbx init --timeout SANDBOX_TIMEOUT` and capture the sandbox ID
+2. **Create Sandbox** - `uv run sbx init` and capture the sandbox ID
 
 3. **Upload App** - `uv run sbx files upload-dir <sandbox_id> APP_LOCAL_DIR /home/user/app`
 

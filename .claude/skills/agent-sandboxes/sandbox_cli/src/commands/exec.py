@@ -17,7 +17,7 @@ console = Console()
 @click.option("--root", is_flag=True, help="Run as root user (shortcut for --user root)")
 @click.option("--shell", is_flag=True, help="Execute in shell context (enables pipes, redirections, wildcards)")
 @click.option("--env", "-e", multiple=True, help="Environment variables (KEY=VALUE)")
-@click.option("--timeout", default=60, type=int, help="Command timeout in seconds (0 for unlimited)")
+@click.option("--timeout", default=120, type=int, help="Command timeout in seconds (0 for unlimited)")
 @click.option("--background", is_flag=True, help="Run in background")
 @click.option("--stdin", is_flag=True, help="Enable stdin for the command")
 def exec(sandbox_id, command, cwd, user, root, shell, env, timeout, background, stdin):

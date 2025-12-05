@@ -18,11 +18,11 @@ cd .claude/skills/agent-sandboxes/sandbox_cli
 grep "E2B_API_KEY" ../../../../.env
 ```
 
-### Step 2: Initialize with Longer Timeout
-Repositories may take longer to clone and test, so increase the timeout:
+### Step 2: Initialize Sandbox
 ```bash
-uv run sbx init --timeout 900
+uv run sbx init
 # YOU capture and remember: sandbox_id = "sbx_repo123test"
+# Default timeout: 1 hour
 ```
 
 ### Step 3: Clone Repository
@@ -47,10 +47,10 @@ uv run sbx sandbox kill sbx_repo123test
 ```
 
 ## Key Points
-- Use longer timeout when initializing (--timeout 900 or more)
+- Default timeout is 1 hour - sufficient for most repos
 - Clone to `/home/user/` directory for easy access
 - Use `--cwd` flag to run commands in specific directories (better than `cd`)
 - Use `--shell` when chaining commands with `&&`
-- Increase timeout for long-running tests with `--timeout`
+- Increase command timeout for long tests with `--timeout 300`
 - Git is pre-installed in E2B sandboxes
 - Always clean up the sandbox when done

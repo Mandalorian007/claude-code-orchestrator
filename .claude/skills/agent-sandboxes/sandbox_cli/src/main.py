@@ -67,7 +67,7 @@ cli.add_command(git)
     help="Sandbox template name or ID",
 )
 @click.option(
-    "--timeout", default=600, help="Sandbox timeout in seconds (default: 10 minutes)"
+    "--timeout", default=3600, help="Sandbox timeout in seconds (default: 1 hour)"
 )
 @click.option("--env", "-e", multiple=True, help="Environment variables (KEY=VALUE)")
 @click.option("--name", "-n", default=None, help="Sandbox name (stored in metadata)")
@@ -83,7 +83,7 @@ def init(template, timeout, env, name):
 
     Examples:
         sbx init
-        sbx init --template fullstack-app-template --timeout 43200 --name my-workflow
+        sbx init --template fullstack-app-template --name my-workflow
     """
     try:
         from .modules import sandbox as sbx_module

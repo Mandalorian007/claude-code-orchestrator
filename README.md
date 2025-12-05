@@ -68,8 +68,8 @@ The sandbox CLI can also be used directly:
 ```bash
 cd .claude/skills/agent-sandboxes/sandbox_cli/
 
-# Initialize a sandbox (12-hour timeout)
-uv run sbx init --timeout 43200
+# Initialize a sandbox (1-hour timeout, default)
+uv run sbx init
 
 # Execute commands
 uv run sbx exec <sandbox_id> "echo hello"

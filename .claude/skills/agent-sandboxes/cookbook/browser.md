@@ -162,12 +162,12 @@ When testing web apps hosted in E2B sandboxes:
 
 ```bash
 # 1. Get the public URL from sandbox
-uv run sbx sandbox get-host <sandbox_id> --port 5173
-# Returns: https://5173-<sandbox_id>.e2b.app
+uv run sbx sandbox get-host <sandbox_id> --port 3000
+# Returns: https://3000-<sandbox_id>.e2b.app
 
 # 2. Start browser and navigate
 uv run sbx browser start
-uv run sbx browser nav https://5173-<sandbox_id>.e2b.app
+uv run sbx browser nav https://3000-<sandbox_id>.e2b.app
 
 # 3. Validate
 uv run sbx browser eval "document.readyState"

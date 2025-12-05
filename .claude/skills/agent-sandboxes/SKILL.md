@@ -13,7 +13,7 @@ This skill provides access to E2B sandboxes through a streamlined CLI for safe c
 - **GH_TOKEN**: GitHub Personal Access Token for cloning private repositories (optional, stored in the environment file)
 - **SANDBOX_CLI_PATH**: `.claude/skills/agent-sandboxes/sandbox_cli/`
 - **ENVIRONMENT_FILE_PATH**: `../../../../.env`
-- **TIMEOUT_DURATION_IN_SECONDS**: `43200` (12 hours)
+- **TIMEOUT_DURATION_IN_SECONDS**: `3600` (1 hour)
 
 ## Prerequisites
 
@@ -110,7 +110,7 @@ Options:
   --env KEY=VALUE     Environment variables (multiple allowed)
   --root              Run as root user
   --shell             Enable shell features (pipes, redirections, wildcards)
-  --timeout SECONDS   Command timeout (default: 60)
+  --timeout SECONDS   Command timeout (default: 120)
   --background        Run command in background
 ```
 
@@ -373,47 +373,36 @@ uv run sbx exec <sandbox_id> "/home/user/.local/bin/uv pip install --system requ
 
 #### 4.1: Start the Server
 
-Ensure your frontend is configured to use the appropriate port:
+Start the Next.js development server:
 
 ```bash
-# For Next.js (defaults to port 3000)
 uv run sbx exec <sandbox_id> "npm run dev" --background --cwd /home/user/project
-
-# For Python/Flask
-uv run sbx exec <sandbox_id> "python -m http.server 5173" --background --cwd /home/user/project
-
-# For static HTML/CSS/JS
-uv run sbx exec <sandbox_id> "python -m http.server 5173" --background --cwd /home/user/dist
-
-# For a custom Python server
-uv run sbx files write <sandbox_id> /home/user/server.py "from flask import Flask; app = Flask(__name__); app.run(host='0.0.0.0', port=5173)"
-uv run sbx exec <sandbox_id> "python /home/user/server.py" --background
 ```
 
 **Key points**:
 - Use `--background` flag to keep server running
-- **Next.js uses port 3000** by default, other frameworks typically use 5173
-- Ensure your frontend code is configured for the same port
+- Next.js defaults to port 3000
+- Ensure `next.config.js` binds to `0.0.0.0` for external access
 
 #### 4.2: Get the Exposed URL
 
 **CRITICAL**: Always use the `get-host` command to retrieve the actual public URL. **Do NOT try to construct or infer the URL**.
 
 ```bash
-uv run sbx sandbox get-host <sandbox_id> --port 5173
+uv run sbx sandbox get-host <sandbox_id> --port 3000
 ```
 
-This command returns the authoritative public URL (format: `https://5173-<sandbox_id>.e2b.app`).
+This command returns the authoritative public URL (format: `https://3000-<sandbox_id>.e2b.app`).
 
 **Example**:
 ```bash
-uv run sbx sandbox get-host sbx_abc123def456 --port 5173
-# Output: https://5173-sbx_abc123def456.e2b.app
+uv run sbx sandbox get-host sbx_abc123def456 --port 3000
+# Output: https://3000-sbx_abc123def456.e2b.app
 # YOU capture and remember this URL in your context
 ```
 
 **Important**:
-- Always use `--port 5173` to match your server port
+- Always use `--port 3000` to match your server port
 - Capture the URL in your context/memory (not shell variables)
 - Use the exact URL returned by this command
 - Do NOT construct URLs manually (they will fail)
@@ -422,11 +411,11 @@ uv run sbx sandbox get-host sbx_abc123def456 --port 5173
 
 Get the URL using `get-host` and test it:
 ```bash
-# Get the URL (captures output: https://5173-<sandbox_id>.e2b.app)
-uv run sbx sandbox get-host <sandbox_id> --port 5173
+# Get the URL (captures output: https://3000-<sandbox_id>.e2b.app)
+uv run sbx sandbox get-host <sandbox_id> --port 3000
 
 # YOU remember the URL in your context, then test it
-curl https://5173-<sandbox_id>.e2b.app
+curl https://3000-<sandbox_id>.e2b.app
 ```
 
 **Note**: Capture the URL from get-host output and remember it in your context. Use the exact URL in subsequent commands.
@@ -475,10 +464,10 @@ The `extend-lifetime` command **adds** the specified seconds to the remaining li
 
 If you built a frontend or web application, use `get-host` to retrieve the public URL:
 ```bash
-uv run sbx sandbox get-host <sandbox_id> --port 5173
+uv run sbx sandbox get-host <sandbox_id> --port 3000
 ```
 
-This returns the actual URL (e.g., `https://5173-<sandbox_id>.e2b.app`).
+This returns the actual URL (e.g., `https://3000-<sandbox_id>.e2b.app`).
 
 **Do NOT construct the URL manually** - always use the `get-host` command.
 
@@ -494,12 +483,12 @@ Example report:
 ✓ Sandbox created successfully!
 
 Sandbox ID: sbx_abc123def456
-Application URL: [Use: uv run sbx sandbox get-host sbx_abc123def456 --port 5173]
+Application URL: [Use: uv run sbx sandbox get-host sbx_abc123def456 --port 3000]
 
 Your sandbox will automatically terminate after TIMEOUT_DURATION_IN_SECONDS.
 ```
 
-**Note**: Always get the actual URL using `sbx sandbox get-host <sandbox_id> --port 5173` - never construct it manually.
+**Note**: Always get the actual URL using `sbx sandbox get-host <sandbox_id> --port 3000` - never construct it manually.
 
 **IMPORTANT**:
 - **Never delete the sandbox unless you're explicitly asked to do so**
@@ -533,11 +522,11 @@ Covers: Git operations, using --cwd flag, running commands in repository context
 
 Covers: Binary file upload/download, image processing, using appropriate file operations for binary vs text.
 
-### Example 5: Host Frontend Application
-**Read when**: User wants to build a web app, UI, dashboard, or any frontend accessible via browser.
+### Example 5: Host Next.js Application
+**Read when**: User wants to build a Next.js web app, UI, or dashboard accessible via browser.
 **See**: [examples/05_host_frontend.md](examples/05_host_frontend.md)
 
-Covers: Exposing frontends, using port 5173, starting servers in background, getting public URLs, keeping sandboxes alive.
+Covers: Creating Next.js apps, starting dev server with external access, getting public URLs.
 
 ## Reference
 
@@ -571,7 +560,7 @@ For complete command reference and advanced usage, see:
 - Run with `uv run sbx` instead of just `sbx`
 
 **"Sandbox timeout"**:
-- Increase timeout: `sbx init --timeout 900`
+- Default is 1 hour - use `extend-lifetime` to add time if needed
 - Use `--timeout` flag on long-running exec commands
 
 **"Permission denied"**:

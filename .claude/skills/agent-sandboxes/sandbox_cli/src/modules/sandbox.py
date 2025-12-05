@@ -77,7 +77,7 @@ def get_host(sandbox_id: str, port: int) -> str:
 
     Args:
         sandbox_id: The sandbox ID
-        port: The port number to expose (e.g., 5173 for Vite)
+        port: The port number to expose (e.g., 3000 for Next.js)
 
     Returns:
         Public hostname (e.g., "xxxxx.e2b.app")

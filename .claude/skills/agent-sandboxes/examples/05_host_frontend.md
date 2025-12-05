@@ -1,14 +1,13 @@
-# Example 5: Host Frontend Application
+# Example 5: Host Next.js Application
 
 ## When to Use
-Read this when you're building a web application, UI, or any frontend that needs to be accessible via a browser.
+Read this when you're building a Next.js web application that needs to be accessible via a browser.
 
 ## User Request Pattern
 ```
 Build me a web app/site
 Create a dashboard/UI
-Make a simple HTML/CSS/JS app
-Build a React/Vue/Vite application
+Build a Next.js application
 I want to see this running in my browser
 ```
 
@@ -20,259 +19,153 @@ cd .claude/skills/agent-sandboxes/sandbox_cli
 grep "E2B_API_KEY" ../../../../.env
 ```
 
-### Step 2: Initialize Sandbox with Longer Timeout
-Frontends need time to build and run:
+### Step 2: Initialize Sandbox
 ```bash
-uv run sbx init --timeout 1800  # 30 minutes
+uv run sbx init
 # YOU capture and remember: sandbox_id = "sbx_frontend123app"
+# Default timeout: 1 hour
 ```
 
-### Step 3: Build Your Application
+### Step 3: Create Next.js Application
 
-#### Option A: Static HTML/CSS/JS
 ```bash
-# Create the HTML file
-uv run sbx files write sbx_frontend123app /home/user/app/index.html "
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My App</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-    </style>
-</head>
-<body>
-    <div class='container'>
-        <h1>Hello from E2B Sandbox!</h1>
-        <p>This app is running on port 5173</p>
-    </div>
-</body>
-</html>
-"
-```
+# Create Next.js app with TypeScript and Tailwind
+uv run sbx exec sbx_frontend123app "npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir --no-git" --cwd /home/user --timeout 120
 
-#### Option B: Python Flask App
-```bash
 # Install dependencies
-uv run sbx exec sbx_frontend123app "curl -LsSf https://astral.sh/uv/install.sh | sh" --shell --timeout 120
-uv run sbx exec sbx_frontend123app "/home/user/.local/bin/uv pip install --system flask"
+uv run sbx exec sbx_frontend123app "npm install" --cwd /home/user/my-app
+```
 
-# Create the Flask app
-uv run sbx files write sbx_frontend123app /home/user/app.py "
-from flask import Flask, render_template_string
+### Step 4: Configure for External Access
 
-app = Flask(__name__)
+Update `next.config.js` to bind to `0.0.0.0`:
+```bash
+uv run sbx files write sbx_frontend123app /home/user/my-app/next.config.ts "
+import type { NextConfig } from 'next'
 
-@app.route('/')
-def home():
-    return render_template_string('''
-        <!DOCTYPE html>
-        <html>
-        <head><title>Flask App</title></head>
-        <body>
-            <h1>Flask App on E2B</h1>
-            <p>Running on port 5173</p>
-        </body>
-        </html>
-    ''')
+const nextConfig: NextConfig = {
+  // Allow external access from E2B sandbox
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['*'],
+    },
+  },
+}
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5173, debug=True)
+export default nextConfig
+
+// For dev server, use: npm run dev -- -H 0.0.0.0
 "
 ```
 
-#### Option C: Vite/React App
+### Step 5: Start the Server in Background
+
 ```bash
-# Install Node and create Vite app
-uv run sbx exec sbx_frontend123app "curl -fsSL https://bun.sh/install | bash" --shell --timeout 120
-uv run sbx exec sbx_frontend123app "/home/user/.bun/bin/bun create vite my-app --template react" --cwd /home/user
-uv run sbx exec sbx_frontend123app "/home/user/.bun/bin/bun install" --cwd /home/user/my-app
-
-# Update vite.config.js to use port 5173
-uv run sbx files write sbx_frontend123app /home/user/my-app/vite.config.js "
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    host: '0.0.0.0',
-    port: 5173
-  }
-})
-"
+uv run sbx exec sbx_frontend123app "npm run dev -- -H 0.0.0.0" --background --cwd /home/user/my-app
 ```
 
-### Step 4: Start the Server in Background
+**Key points**:
+- Use `--background` flag to keep server running
+- `-H 0.0.0.0` binds to all interfaces for external access
+- Next.js defaults to port 3000
 
-**CRITICAL**: Always use port **5173** and run in **background**:
+### Step 6: Get the Public URL
 
-#### For Static Files:
-```bash
-uv run sbx exec sbx_frontend123app "python -m http.server 5173" --background --cwd /home/user/app
-```
-
-#### For Flask:
-```bash
-uv run sbx exec sbx_frontend123app "python app.py" --background --cwd /home/user
-```
-
-#### For Vite/React:
-```bash
-uv run sbx exec sbx_frontend123app "/home/user/.bun/bin/bun run dev" --background --cwd /home/user/my-app
-```
-
-### Step 5: Get the Public URL
-
-**CRITICAL**: Always use the `get-host` command with the port to get the actual URL:
+**CRITICAL**: Always use the `get-host` command to get the actual URL:
 
 ```bash
-uv run sbx sandbox get-host sbx_frontend123app --port 5173
+uv run sbx sandbox get-host sbx_frontend123app --port 3000
 ```
 
 This returns the authoritative URL:
 ```
-https://5173-sbx_frontend123app.e2b.app
+https://3000-sbx_frontend123app.e2b.app
 ```
 
 **IMPORTANT**:
 - **Do NOT construct or infer the URL** - it will fail
-- **Always use `sbx sandbox get-host <sandbox_id> --port 5173`**
+- **Always use `sbx sandbox get-host <sandbox_id> --port 3000`**
 - Use the exact URL returned by this command
 
-### Step 6: Verify and Share
+### Step 7: Verify and Share
 
-Get the URL and verify it's working:
 ```bash
 # Get the URL - capture output in your context
-uv run sbx sandbox get-host sbx_frontend123app --port 5173
-# Output: https://5173-sbx_frontend123app.e2b.app
+uv run sbx sandbox get-host sbx_frontend123app --port 3000
+# Output: https://3000-sbx_frontend123app.e2b.app
 # YOU remember this URL
 
-# Test it with the URL from above
-curl https://5173-sbx_frontend123app.e2b.app
+# Test it
+curl https://3000-sbx_frontend123app.e2b.app
 ```
 
-Share the URL with the user:
+Share with the user:
 ```
 Your application is now running at:
-https://5173-sbx_frontend123app.e2b.app
+https://3000-sbx_frontend123app.e2b.app
 
-The app is hosted on port 5173 and will remain available for 30 minutes (auto-timeout).
+The app will remain available for 1 hour (auto-timeout).
 ```
 
-**Important**: Don't use shell variables for the URL (conflicts with other agents). Capture the get-host output in your context and use it directly.
+### Step 8: Report to User
 
-### Step 7: Report to User
-
-Report the sandbox ID and URL to the user. The sandbox will auto-terminate after 30 minutes.
+Report the sandbox ID and URL. The sandbox auto-terminates after 1 hour.
 
 **Never delete the sandbox unless explicitly asked to do so.**
 
 ## Key Points
 
 ### Port Configuration
-- **Always default to port 5173** unless specified otherwise
-- Ensure server listens on `0.0.0.0` (not `localhost` or `127.0.0.1`)
-- Configure frontend dev server to use port 5173
-- Port must match between server config and frontend config
+- **Always use port 3000** (Next.js default)
+- Use `-H 0.0.0.0` when starting dev server for external access
 
 ### Server Requirements
-- **Host**: Must be `0.0.0.0` to be accessible externally
-- **Port**: Use 5173 by default
-- **Background**: Always use `--background` flag to keep server running
-- **Timeout**: Increase sandbox timeout for frontends (1800+ seconds)
+- **Host**: Must bind to `0.0.0.0` to be accessible externally
+- **Port**: 3000 (Next.js default)
+- **Background**: Always use `--background` flag
 
 ### Getting the URL
-**ONLY METHOD**: Use `sbx sandbox get-host <sandbox_id> --port 5173`
+**ONLY METHOD**: Use `sbx sandbox get-host <sandbox_id> --port 3000`
 
 Never construct or infer the URL - always use the get-host command.
-
-### Common Server Commands
-
-**Python Simple HTTP Server** (for static files):
-```bash
-python -m http.server 5173
-```
-
-**Flask**:
-```python
-app.run(host='0.0.0.0', port=5173)
-```
-
-**Vite** (vite.config.js):
-```javascript
-server: {
-  host: '0.0.0.0',
-  port: 5173
-}
-```
-
-**Express** (Node.js):
-```javascript
-app.listen(5173, '0.0.0.0', () => console.log('Server on 5173'))
-```
 
 ## Troubleshooting
 
 **"Cannot access the URL"**:
-- Verify you used `get-host` command to get the URL (don't construct manually)
+- Verify you used `get-host` command (don't construct manually)
 - Check server is running: `uv run sbx sandbox status <sandbox_id>`
-- Verify port is 5173 in both server and get-host command
-- Ensure server listens on `0.0.0.0`, not `localhost`
-
-**"Port already in use"**:
-- Kill existing process on port 5173 in sandbox
-- Or use a different port (update both server and frontend config)
+- Ensure `-H 0.0.0.0` was used when starting the server
 
 **"Connection refused"**:
 - Server might have crashed - check logs
-- Restart server in background
-- Verify `--background` flag was used
+- Restart server in background with `-H 0.0.0.0`
 
 **"Frontend shows blank page"**:
 - Check browser console for errors
-- Verify static assets are in correct directory
-- Check API endpoints are accessible
-- Ensure CORS is configured if needed
+- Verify the build succeeded
+- Check API routes are accessible
 
-## Complete Example: Static Site
+## Complete Example
 
 ```bash
 # 1. Initialize
-uv run sbx init --timeout 1800
-# Captured: sbx_site456
+uv run sbx init
+# Captured: sbx_myapp123
 
-# 2. Create structure
-uv run sbx files mkdir sbx_site456 /home/user/site
+# 2. Create Next.js app
+uv run sbx exec sbx_myapp123 "npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir --no-git" --cwd /home/user --timeout 120
 
-# 3. Create index.html
-uv run sbx files write sbx_site456 /home/user/site/index.html "
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Site</title>
-    <style>body{margin:40px auto;max-width:650px;padding:0 10px}</style>
-</head>
-<body>
-    <h1>Welcome!</h1>
-    <p>This site is running on E2B at port 5173</p>
-</body>
-</html>
-"
+# 3. Start dev server with external access
+uv run sbx exec sbx_myapp123 "npm run dev -- -H 0.0.0.0" --background --cwd /home/user/my-app
 
-# 4. Start server on port 5173
-uv run sbx exec sbx_site456 "python -m http.server 5173" --background --cwd /home/user/site
+# 4. Get public URL
+uv run sbx sandbox get-host sbx_myapp123 --port 3000
+# Returns: https://3000-sbx_myapp123.e2b.app
+# YOU remember this URL
 
-# 5. Get public URL (capture in your context, not variable)
-uv run sbx sandbox get-host sbx_site456 --port 5173
-# Returns: https://5173-sbx_site456.e2b.app
-# YOU remember: url = "https://5173-sbx_site456.e2b.app"
+# 5. Verify
+curl https://3000-sbx_myapp123.e2b.app
 
-# 6. Share with user (using the URL you captured)
-echo "Visit: https://5173-sbx_site456.e2b.app"
-
-# 7. Sandbox auto-terminates after 30 minutes
-# Never kill unless explicitly requested
+# 6. Share URL with user
+# Sandbox auto-terminates after 1 hour
 ```

@@ -183,7 +183,7 @@ def push(sandbox_id, path, branch, set_upstream):
     git_envs = {"GIT_TERMINAL_PROMPT": "0"}
 
     try:
-        result = cmd_module.run_command(sandbox_id, " ".join(cmd), cwd=path, timeout=60, envs=git_envs)
+        result = cmd_module.run_command(sandbox_id, " ".join(cmd), cwd=path, timeout=120, envs=git_envs)
         if result["exit_code"] == 0:
             console.print("[green]✓ Pushed[/green]")
         else:
@@ -257,7 +257,7 @@ def pr(sandbox_id, title, body, path, base):
     console.print(f"[dim]{head_branch} → {base}[/dim]")
 
     try:
-        result = cmd_module.run_command(sandbox_id, curl_cmd, cwd=path, timeout=30)
+        result = cmd_module.run_command(sandbox_id, curl_cmd, cwd=path, timeout=120)
         if result["exit_code"] == 0:
             try:
                 response = json.loads(result["stdout"])

@@ -18,20 +18,20 @@ uv run sbx --help
 
 ```bash
 # Create a new sandbox with 30-minute timeout
-uv run sbx init --timeout 1800
+uv run sbx init --timeout 3600
 
 # The command outputs a sandbox ID (e.g., sbx_abc123def)
 # IMPORTANT: Capture and remember this ID in your context/memory
 # Use it directly in all subsequent commands
 
 # Create with a custom template
-uv run sbx init --template claude-code --timeout 1800
+uv run sbx init --template claude-code --timeout 3600
 
 # Create with environment variables
-uv run sbx init --timeout 1800 --env API_KEY=secret --env DEBUG=true
+uv run sbx init --timeout 3600 --env API_KEY=secret --env DEBUG=true
 ```
 
-**Critical**: Always use `--timeout 1800` (30 minutes) and remember the sandbox ID in your context.
+**Note**: The default timeout is 1 hour. Remember the sandbox ID in your context.
 
 ### 2. File Operations
 
@@ -180,14 +180,14 @@ uv run sbx exec <sandbox_id> "git push origin main" --cwd /home/user/repo
 ### 6. Sandbox Management
 
 ```bash
-# Create a new sandbox (always use --timeout 1800 for 30 minutes)
-uv run sbx sandbox create --template base --timeout 1800
+# Create a new sandbox (default timeout: 1 hour)
+uv run sbx sandbox create --template base
 
 # Create sandbox with custom environment
-uv run sbx sandbox create --timeout 1800 --env API_KEY=secret --env DEBUG=true
+uv run sbx sandbox create --env API_KEY=secret --env DEBUG=true
 
 # Create sandbox with auto-pause (beta)
-uv run sbx sandbox create --timeout 1800 --auto-pause
+uv run sbx sandbox create --auto-pause
 
 # Connect to existing sandbox
 uv run sbx sandbox connect <sandbox_id>
@@ -265,11 +265,11 @@ uv run sbx browser nav https://app2.example.com --port 9223
 **Validating Sandbox Apps**:
 ```bash
 # Get public URL from sandbox
-uv run sbx sandbox get-host <sandbox_id> --port 5173
+uv run sbx sandbox get-host <sandbox_id> --port 3000
 
 # Validate in browser
 uv run sbx browser start
-uv run sbx browser nav https://5173-<sandbox_id>.e2b.app
+uv run sbx browser nav https://3000-<sandbox_id>.e2b.app
 uv run sbx browser eval "document.readyState"
 uv run sbx browser screenshot --path validation.png
 uv run sbx browser close
@@ -347,15 +347,12 @@ File operations use E2B's SDK APIs instead of shell commands for:
 
 1. **Remember Sandbox ID**: Always capture and remember the sandbox ID from init output:
    ```bash
-   uv run sbx init --timeout 1800
+   uv run sbx init --timeout 3600
    # Captures output: sbx_abc123def
    # Store in your context/memory, use directly in commands
    ```
 
-2. **Always Use 30-Minute Timeout**: Default timeout for all sandboxes:
-   ```bash
-   uv run sbx init --timeout 1800  # Always use this
-   ```
+2. **Default 1-Hour Timeout**: Sandbox timeout defaults to 1 hour - no need to specify unless you need longer.
 
 3. **Use Shell Flag**: For pipes, redirections, and wildcards, use `--shell`:
    ```bash
@@ -403,7 +400,7 @@ Agents can:
 
 ```bash
 # Initialize sandbox (captures ID: sbx_abc123)
-uv run sbx init --timeout 1800
+uv run sbx init --timeout 3600
 
 # Install uv package manager
 uv run sbx exec <sandbox_id> "curl -LsSf https://astral.sh/uv/install.sh | sh" --shell --timeout 120
@@ -424,14 +421,14 @@ print(soup.title.string)
 # Run the script
 uv run sbx exec <sandbox_id> "python3 /home/user/scraper.py"
 
-# Sandbox will auto-terminate after 30 minutes
+# Sandbox will auto-terminate after 1 hour
 ```
 
 ### Example 2: Git Workflow
 
 ```bash
 # Initialize sandbox (captures ID: sbx_def456)
-uv run sbx init --timeout 1800
+uv run sbx init --timeout 3600
 
 # Configure git
 uv run sbx exec <sandbox_id> "git config --global user.email 'dev@example.com' && git config --global user.name 'Developer'" --shell
@@ -448,14 +445,14 @@ uv run sbx exec <sandbox_id> "git add . && git commit -m 'Update README'" --shel
 # View history
 uv run sbx exec <sandbox_id> "git log --oneline -n 5" --cwd /home/user/repo
 
-# Sandbox will auto-terminate after 30 minutes
+# Sandbox will auto-terminate after 1 hour
 ```
 
 ### Example 3: Complex Multi-Step Operation
 
 ```bash
 # Initialize with template (captures ID: sbx_ghi789)
-uv run sbx init --template claude-code --timeout 1800 --env PROJECT=myapp
+uv run sbx init --template claude-code --timeout 3600 --env PROJECT=myapp
 
 # Create project structure
 uv run sbx files mkdir <sandbox_id> /home/user/myapp
@@ -470,17 +467,17 @@ uv run sbx exec <sandbox_id> "
   pytest --version
 " --shell --timeout 300
 
-# Background task (runs for 30 minutes until auto-timeout)
-uv run sbx exec <sandbox_id> "python server.py" --background --cwd /home/user/myapp
+# Background task (runs for 1 hour until auto-timeout)
+uv run sbx exec <sandbox_id> "npm run dev -- -H 0.0.0.0" --background --cwd /home/user/myapp
 
-# Sandbox will auto-terminate after 30 minutes
+# Sandbox will auto-terminate after 1 hour
 ```
 
 ### Example 4: Working with Binary Files (Images, PDFs, etc.)
 
 ```bash
 # Initialize sandbox (captures ID: sbx_jkl012)
-uv run sbx init --timeout 1800
+uv run sbx init --timeout 3600
 
 # Upload an image for processing
 uv run sbx files upload <sandbox_id> ./input_photo.jpg /home/user/input.jpg
@@ -509,7 +506,7 @@ uv run sbx files download <sandbox_id> /home/user/output.png ./output.png
 # Verify the file
 ls -lh ./output.png
 
-# Sandbox will auto-terminate after 30 minutes
+# Sandbox will auto-terminate after 1 hour
 ```
 
 ## Comparison: Before vs After

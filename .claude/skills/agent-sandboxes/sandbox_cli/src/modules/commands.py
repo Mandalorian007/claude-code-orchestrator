@@ -12,7 +12,7 @@ def run_command(
     cmd: str,
     cwd: Optional[str] = None,
     envs: Optional[Dict[str, str]] = None,
-    timeout: Optional[float] = 60,
+    timeout: Optional[float] = 120,
 ) -> Dict:
     """
     Run a command in the sandbox and wait for it to complete.
@@ -42,7 +42,7 @@ def run_command_background(
     cmd: str,
     cwd: Optional[str] = None,
     envs: Optional[Dict[str, str]] = None,
-    timeout: Optional[float] = 60,
+    timeout: Optional[float] = 120,
 ) -> Dict:
     """
     Run a command in the background and return immediately.

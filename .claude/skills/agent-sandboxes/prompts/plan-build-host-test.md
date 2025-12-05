@@ -49,7 +49,7 @@ SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
 
 1. **Initialize Sandbox**
    - Change to SANDBOX_CLI_PATH directory
-   - Run `uv run sbx init --template fullstack-app-template --timeout 43200 --name [WORKFLOW_ID]` to create a new sandbox with the optimized template
+   - Run `uv run sbx init --template fullstack-app-template --name [WORKFLOW_ID]` to create a new sandbox with the optimized template (default timeout: 1 hour)
    - The template includes: Node.js 22 and SQLite (Next.js + Shadcn/ui installed per-project via npm)
    - This stores the WORKFLOW_ID in the sandbox metadata for tracking
    - Capture the sandbox ID from the output (format: `sbx_abc123def456`)
