@@ -4,6 +4,7 @@ E2B Sandbox CLI - Main entry point.
 A comprehensive CLI for managing E2B sandboxes and performing operations.
 """
 
+import os
 import click
 from pathlib import Path
 from dotenv import load_dotenv
@@ -19,6 +20,7 @@ from .commands.sandbox import sandbox
 from .commands.files import files
 from .commands.exec import exec
 from .commands.browser import browser
+from .commands.git import git
 
 console = Console()
 
@@ -34,6 +36,7 @@ def cli():
     - Perform file operations with SDK APIs (files)
     - Execute any command with full control (exec)
     - Browser automation for UI validation (browser)
+    - Git operations with automatic auth (git)
 
     Most commands require a SANDBOX_ID. You can get one by:
     1. Creating a new sandbox: sbx init
@@ -41,6 +44,8 @@ def cli():
 
     Tip: For multi-agent workflows, capture the sandbox ID in your context
     and use it directly in commands (avoid shell variables for safety).
+
+    Git: Set GH_TOKEN in .env for automatic GitHub authentication.
     """
     pass
 
@@ -50,6 +55,7 @@ cli.add_command(sandbox)
 cli.add_command(files)
 cli.add_command(exec)
 cli.add_command(browser)
+cli.add_command(git)
 
 
 # Add an init command for quick sandbox setup
@@ -92,6 +98,10 @@ def init(template, timeout, env, name):
             if "=" in e:
                 key, value = e.split("=", 1)
                 envs[key] = value
+
+        # Auto-forward GH_TOKEN for git operations
+        if "GH_TOKEN" in os.environ and "GH_TOKEN" not in envs:
+            envs["GH_TOKEN"] = os.environ["GH_TOKEN"]
 
         # Add name to metadata if provided
         metadata = {}

@@ -21,6 +21,7 @@ Watch the [Gemini 3 Demo](https://youtu.be/V5IhsHEHXOg) or the newer [Claude Opu
 *   **Isolated Execution**: Run untrusted code, tests, and binaries safely.
 *   **Full-Stack Development**: Scaffold, build, and host Next.js + Shadcn/ui + SQLite apps.
 *   **Browser Automation**: Built-in Playwright integration for visual validation.
+*   **Git Integration**: Clone private GitHub repositories with automatic authentication.
 *   **Agent-First Design**: Optimized for CLI agents with structured prompts and robust error handling.
 *   **Persistent Context**: Tools to manage sandbox lifecycles across agent turns.
 
@@ -46,7 +47,22 @@ Watch the [Gemini 3 Demo](https://youtu.be/V5IhsHEHXOg) or the newer [Claude Opu
     ```
     *(Get your key from [E2B Dashboard](https://e2b.dev/dashboard/keys))*
 
-3.  **Open your Agentic Coding Tool**:
+3.  **(Optional) Configure GitHub Token** for cloning private repositories:
+    ```env
+    GH_TOKEN=ghp_...
+    ```
+
+    **To create a GitHub Personal Access Token:**
+    1. Go to [GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)](https://github.com/settings/tokens)
+    2. Click "Generate new token (classic)"
+    3. Give it a descriptive name (e.g., "Agent Sandbox")
+    4. Select scopes:
+       - `repo` - Full control of private repositories (required for private repos)
+    5. Click "Generate token" and copy it to your `.env` file
+
+    *Note: The token is automatically forwarded to sandboxes and used for `sbx git clone` commands.*
+
+4.  **Open your Agentic Coding Tool**:
     Open your Agentic Coding Tool and start prompting!
 
     ```bash
@@ -199,6 +215,7 @@ uv run sbx --help
 *   **Init**: `uv run sbx init --timeout 1800`
 *   **Execute**: `uv run sbx exec <sandbox_id> "echo hello"`
 *   **Files**: `uv run sbx files ls <sandbox_id> /home/user`
+*   **Git Clone**: `uv run sbx git clone <sandbox_id> https://github.com/user/repo.git`
 *   **Browser**: `uv run sbx browser start`
 
 ## 🏗️ Architecture

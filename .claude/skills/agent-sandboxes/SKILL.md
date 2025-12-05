@@ -10,6 +10,7 @@ This skill provides access to E2B sandboxes through a streamlined CLI for safe c
 ## Variables
 
 - **E2B_API_KEY**: The environment variable containing the E2B API key (stored in the environment file)
+- **GH_TOKEN**: GitHub Personal Access Token for cloning private repositories (optional, stored in the environment file)
 - **SANDBOX_CLI_PATH**: `.claude/skills/agent-sandboxes/sandbox_cli/`
 - **ENVIRONMENT_FILE_PATH**: `../../../../.env`
 - **TIMEOUT_DURATION_IN_SECONDS**: `43200` (12 hours)
@@ -57,8 +58,7 @@ Pre-built templates with different resource levels. Use `--template` flag with `
 
 | Template | vCPU | RAM | Cost | Best For |
 |----------|------|-----|------|----------|
-| `fullstack-app-template` | 2 | 2GB | $0.13/hr | Simple Next.js apps (default) |
-| `fullstack-app-template-lite` | 2 | 4GB | $0.15/hr | Browser tests |
+| `fullstack-app-template-lite` | 2 | 4GB | $0.15/hr | Simple Next.js apps (default) |
 | `fullstack-app-template-standard` | 4 | 4GB | $0.27/hr | Parallel builds |
 | `fullstack-app-template-heavy` | 4 | 8GB | $0.33/hr | Multi-browser |
 | `fullstack-app-template-max` | 8 | 8GB | $0.44/hr | Fastest |
@@ -78,13 +78,14 @@ Use agent sandboxes when the user needs to:
 
 ### CLI Overview
 
-The sandbox CLI has **four core command groups**:
+The sandbox CLI has **six core command groups**:
 
-1. **`sbx init`** - Quick sandbox initialization
+1. **`sbx init`** - Quick sandbox initialization (auto-forwards GH_TOKEN)
 2. **`sbx sandbox`** - Lifecycle management (create, connect, kill, pause, extend-lifetime, info)
 3. **`sbx files`** - File operations (ls, read, write, upload, download, rm, mkdir, mv)
 4. **`sbx exec`** - Unified command execution (the most powerful command)
 5. **`sbx browser`** - Browser automation for UI validation (visual testing)
+6. **`sbx git`** - Git operations with automatic GitHub authentication
 
 **Get CLI Help**: Use `sbx --help` to see all available commands and options:
 ```bash
@@ -94,6 +95,7 @@ uv run sbx init --help      # Help for init command
 uv run sbx sandbox --help   # Help for sandbox commands
 uv run sbx files --help     # Help for file operations
 uv run sbx exec --help      # Help for exec command
+uv run sbx git --help       # Help for git operations
 ```
 
 ### Key Command: `sbx exec`
@@ -135,6 +137,85 @@ sbx browser close                       # Close browser and kill process
 ```
 
 **For parallel agents**: Use `--port` flag with unique ports (9222-9999).
+
+### Key Command: `sbx git`
+
+Git operations with automatic GitHub authentication. The `GH_TOKEN` from your local `.env` is automatically:
+1. Forwarded to the sandbox environment on `sbx init`
+2. Injected into GitHub URLs when using `sbx git clone`
+
+**Clone a repository**:
+```bash
+uv run sbx git clone <sandbox_id> <url> [options]
+
+Options:
+  --branch, -b    Branch to clone
+  --depth, -d     Shallow clone depth (faster)
+  --path, -p      Target directory (default: /home/user)
+```
+
+**Examples**:
+```bash
+# Clone a private repo (GH_TOKEN auto-injected)
+uv run sbx git clone <sandbox_id> https://github.com/myorg/private-repo.git
+
+# Clone specific branch with shallow depth
+uv run sbx git clone <sandbox_id> https://github.com/user/repo.git --branch main --depth 1
+
+# Clone into specific directory
+uv run sbx git clone <sandbox_id> https://github.com/user/repo.git --path /home/user/projects
+```
+
+**Push commits to remote**:
+```bash
+uv run sbx git push <sandbox_id> [options]
+
+Options:
+  --path, -p          Repository path (default: /home/user/project)
+  --branch, -b        Branch to push (default: current branch)
+  --set-upstream, -u  Set upstream tracking for new branch
+```
+
+**Examples**:
+```bash
+# Push current branch
+uv run sbx git push <sandbox_id> --path /home/user/repo
+
+# Push and set upstream for new branch
+uv run sbx git push <sandbox_id> --path /home/user/repo -u
+
+# Push specific branch
+uv run sbx git push <sandbox_id> --path /home/user/repo --branch feature-x
+```
+
+**Create a pull request**:
+```bash
+uv run sbx git pr <sandbox_id> "<title>" [options]
+
+Options:
+  --body, -b    PR description
+  --path, -p    Repository path (default: /home/user/project)
+  --base        Base branch (default: main)
+```
+
+**Examples**:
+```bash
+# Create a simple PR
+uv run sbx git pr <sandbox_id> "Fix authentication bug" --path /home/user/repo
+
+# Create PR with description
+uv run sbx git pr <sandbox_id> "Add feature X" --body "Detailed description here" --path /home/user/repo
+
+# Create PR against different base branch
+uv run sbx git pr <sandbox_id> "Hotfix" --base develop --path /home/user/repo
+```
+
+**For other git operations**, use `sbx exec`:
+```bash
+uv run sbx exec <sandbox_id> "git status" --cwd /home/user/repo
+uv run sbx exec <sandbox_id> "git pull" --cwd /home/user/repo
+uv run sbx exec <sandbox_id> "git log --oneline -5" --cwd /home/user/repo
+```
 
 ### Multi-Agent Considerations
 
@@ -502,3 +583,9 @@ For complete command reference and advanced usage, see:
 - Each command group has detailed help with examples
 
 **Browser issues**: See [cookbook/browser.md](cookbook/browser.md) for troubleshooting.
+
+**"Git clone failed" or "Authentication failed"**:
+- Check `GH_TOKEN` is set in `.env` file
+- Verify token has `repo` scope for private repositories
+- Ensure the token hasn't expired
+- For public repos, `GH_TOKEN` is not required
