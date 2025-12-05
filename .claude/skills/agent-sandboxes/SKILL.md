@@ -373,7 +373,7 @@ uv run sbx exec <sandbox_id> "pnpm dev" --background --cwd /home/user/project
 **Key points**:
 - Use `--background` flag to keep server running
 - Next.js defaults to port 3000
-- Ensure `next.config.js` binds to `0.0.0.0` for external access
+- Use `--hostname 0.0.0.0` flag to allow external access (required for E2B public URLs)
 
 #### 4.2: Get the Exposed URL
 
@@ -412,7 +412,7 @@ curl https://3000-<sandbox_id>.e2b.app
 **Note**: Capture the URL from get-host output and remember it in your context. Use the exact URL in subsequent commands.
 
 **Important**:
-- The server must listen on `0.0.0.0` (not `localhost` or `127.0.0.1`)
+- The server must listen on `0.0.0.0` (use `--hostname 0.0.0.0` flag when starting)
 - Port must match between server and frontend configuration
 - The sandbox will remain alive for 1 hour by default (use `extend-lifetime` to add more time)
 

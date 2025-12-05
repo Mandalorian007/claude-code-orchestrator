@@ -28,7 +28,7 @@ PORT: $2 default 3000 if not provided
 3. **Get Public URL** - Use `sbx sandbox get-host SANDBOX_ID --port PORT` to retrieve the authoritative public URL
 4. **Validate** - Test the URL with `curl` OUTSIDE of the sandbox to verify the application is accessible and responding
    - This is a great opportunity to test the application from the outside in, as a user would by using `curl` to verify the application is accessible and responding. Test all endpoints you created in the plan. If something isn't working, fix it before stopping.
-   - IMPORTANT: You may need to configure next.config.js to allow external access (hostname: '0.0.0.0').
+   - IMPORTANT: Use the `--hostname 0.0.0.0` flag when starting the server to allow external access (e.g., `pnpm dev --hostname 0.0.0.0`).
    - IMPORTANT: Be sure you test against the exposed public URL, not the localhost URL.
 5. **Report** - Provide the user with the working URL and sandbox information
 

@@ -84,7 +84,7 @@ WORKFLOW_OUTPUT_PATH: `temp/<WORKFLOW_ID>/`
    - Validates the application is accessible with curl
    - Store the public URL for the final report
    - Use this as an opportunity to test the application from outside the sandbox.
-   - You may need to configure next.config.js to bind to 0.0.0.0 for external access. This is where iterating and testing is critical.
+   - Use `--hostname 0.0.0.0` flag when starting the server for external access (e.g., `pnpm dev --hostname 0.0.0.0`). This is where iterating and testing is critical.
    - IMPORTANT: Be sure you run your final test from OUTSIDE the sandbox to validate the user's access to the application.
 
 5. **Final Testing & Validation**

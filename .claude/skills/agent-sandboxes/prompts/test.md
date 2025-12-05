@@ -54,7 +54,7 @@ BROWSER_UI_TESTING_SCREENSHOT_PATH: `temp/<WORKFLOW_ID>/ui-testing/`
    - Verify responses match internal test results
    - **CRITICAL**: This validates external access works
    - If external tests fail but internal pass:
-     - Verify Next.js binds to 0.0.0.0 in next.config.js
+     - Verify Next.js was started with `--hostname 0.0.0.0` flag
      - Check server is running on correct port
 
 5. **Page Validation (External)**
