@@ -35,57 +35,21 @@ A toolkit for Claude Code to orchestrate isolated [E2B sandbox](https://e2b.dev/
    GH_TOKEN=ghp_...
    ```
 
-4. **Run setup** (one-time, in Claude Code):
+4. **Validate environment** (in Claude Code):
    ```
-   /setup
+   /prime
    ```
-   This links skill prompts and validates your environment.
 
-## Usage
+## Skills
 
-### Quick Start
+### Agent Sandboxes
 
-From Claude Code, use the skill to spin up a sandbox:
-
-```
-/agent-sandboxes:sandbox "Run python --version and pip list"
-```
-
-### Full Workflow
-
-For complex tasks, use the orchestrated workflow:
-
-```
-/agent-sandboxes:plan-build-host-test "<your prompt>" "<workflow_id>"
-```
-
-This executes: **Plan** → **Build** → **Host** → **Test**
-
-### Manual CLI
-
-The sandbox CLI can also be used directly:
+Remote code execution in isolated E2B environments.
 
 ```bash
 cd .claude/skills/agent-sandboxes/sandbox_cli/
-
-# Initialize a sandbox (1-hour timeout, default)
-uv run sbx init
-
-# Execute commands
-uv run sbx exec <sandbox_id> "echo hello"
-
-# File operations
-uv run sbx files write <sandbox_id> /home/user/script.py "print('hello')"
-uv run sbx files read <sandbox_id> /home/user/output.txt
-
-# Expose a port and get public URL
-uv run sbx sandbox get-host <sandbox_id> --port 3000
-
-# Git operations (auto-authenticated with GH_TOKEN)
-uv run sbx git clone <sandbox_id> https://github.com/user/repo.git
+uv run sbx --help
 ```
-
-## CLI Commands
 
 | Command | Purpose |
 |---------|---------|
@@ -95,9 +59,44 @@ uv run sbx git clone <sandbox_id> https://github.com/user/repo.git
 | `sbx sandbox` | Lifecycle management (info, kill, pause, get-host) |
 | `sbx git` | Git operations with auto-auth |
 
-## Sandbox Templates
+### Playwright
 
-Pre-built templates with different resource levels:
+Local browser automation using Playwright's Chromium.
+
+```bash
+cd .claude/skills/playwright/playwright_cli/
+uv run pw --help
+```
+
+| Command | Purpose |
+|---------|---------|
+| `pw init` | Install Playwright and Chromium |
+| `pw start` | Start browser session |
+| `pw nav` | Navigate to URL |
+| `pw screenshot` | Capture page screenshot |
+| `pw click` / `pw type` | Interact with elements |
+| `pw a11y` | Get accessibility tree |
+| `pw close` | Close browser session |
+
+## Workflows
+
+### Plan Only
+
+Create an implementation plan for a full-stack app:
+
+```
+/workflow:plan "Build a todo app with categories"
+```
+
+### Full Workflow
+
+Execute the complete pipeline—**Plan → Build → Host → Test**:
+
+```
+/workflow:plan-build-host-test "Build a todo app with categories"
+```
+
+## Sandbox Templates
 
 | Template | vCPU | RAM | Best For |
 |----------|------|-----|----------|
@@ -108,8 +107,9 @@ Pre-built templates with different resource levels:
 
 ## Documentation
 
-- [Skill Guide](.claude/skills/agent-sandboxes/SKILL.md) - Full skill and CLI documentation
-- [E2B Docs](https://e2b.dev/docs) - E2B platform documentation
+- [Agent Sandboxes Skill](.claude/skills/agent-sandboxes/SKILL.md)
+- [Playwright Skill](.claude/skills/playwright/SKILL.md)
+- [E2B Docs](https://e2b.dev/docs)
 
 ## Credits
 
