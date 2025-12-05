@@ -77,7 +77,7 @@ BROWSER_UI_TESTING_SCREENSHOT_PATH: `/temp/<WORKFLOW_ID>/ui-testing/`
    - Validate the complete flow works from external access
 
 7. **Browser UI Testing (Execute User Story Workflows from Plan)**
-   - Run `\agent-sandboxes:browser-testing [SANDBOX_ID] [PUBLIC_URL] [PLAN_FILE_PATH] [WORKFLOW_ID]`
+   - Run `/agent-sandboxes:browser-testing [SANDBOX_ID] [PUBLIC_URL] [PLAN_FILE_PATH] [WORKFLOW_ID]`
    - This executes all user story workflows from the plan's `### 6. Browser UI Testing` section
    - Each workflow is executed top-to-bottom with error handling and screenshots
    - All workflows must pass before proceeding
@@ -220,5 +220,5 @@ Your application is production-ready and accessible at: **[PUBLIC_URL]**
 
 **Next Steps:**
 - Fix the issues listed above
-- Re-run validation: `\agent-sandboxes:test [SANDBOX_ID] [PUBLIC_URL]`
+- Re-run validation: `/agent-sandboxes:test [SANDBOX_ID] [PUBLIC_URL]`
 - Do not proceed until all tests pass

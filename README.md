@@ -35,6 +35,12 @@ A toolkit for Claude Code to orchestrate isolated [E2B sandbox](https://e2b.dev/
    GH_TOKEN=ghp_...
    ```
 
+4. **Run setup** (one-time, in Claude Code):
+   ```
+   /setup
+   ```
+   This links skill prompts and validates your environment.
+
 ## Usage
 
 ### Quick Start
@@ -42,7 +48,7 @@ A toolkit for Claude Code to orchestrate isolated [E2B sandbox](https://e2b.dev/
 From Claude Code, use the skill to spin up a sandbox:
 
 ```
-\agent-sandboxes:sandbox "Run python --version and pip list"
+/agent-sandboxes:sandbox "Run python --version and pip list"
 ```
 
 ### Full Workflow
@@ -50,7 +56,7 @@ From Claude Code, use the skill to spin up a sandbox:
 For complex tasks, use the orchestrated workflow:
 
 ```
-\agent-sandboxes:plan-build-host-test "<your prompt>" "<workflow_id>"
+/agent-sandboxes:plan-build-host-test "<your prompt>" "<workflow_id>"
 ```
 
 This executes: **Plan** → **Build** → **Host** → **Test**

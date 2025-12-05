@@ -57,14 +57,14 @@ SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
    - Remember: DO NOT use environment variables or files to store the ID
 
 2. **Create Full-Stack Plan**
-   - Run `\agent-sandboxes:plan-full-stack [USER_PROMPT]`
+   - Run `/agent-sandboxes:plan-full-stack [USER_PROMPT]`
    - Uses the standardized stack: Next.js 15 (App Router) + Shadcn/ui + Tailwind + SQLite
    - Generates a comprehensive implementation plan for a unified full-stack Next.js application
    - Captures the path to the generated plan file in specs/ directory
    - Store the path as `path_to_plan` for the next step
 
 3. **Build Application in Sandbox**
-   - Run `\build [path_to_plan]`
+   - Run `/agent-sandboxes:build [path_to_plan]`
    - This implements the full-stack Next.js application in the E2B sandbox following the plan
    - All work happens in the sandbox using the sandbox ID from step 1
    - Next.js app is set up with proper dependencies (Shadcn/ui, better-sqlite3, etc.)
@@ -76,7 +76,7 @@ SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
    - IMPORTANT: As you wrap up this step, be sure to document how to run the application in the README.md at the top of your application directory. This will tell future agents and engineers how to run your application. Keep it concise, describe the app, describe requirements, and describe the setup steps to run it, but don't get too verbose. Keep it less than 100 lines.
 
 4. **Host and Expose Application**
-   - Run `\host [sandbox_id] [PORT]`
+   - Run `/agent-sandboxes:host [sandbox_id] [PORT]`
    - This starts the Next.js application in the sandbox
    - Starts the server in background mode on PORT (`npm run dev` or `npm run start`)
    - Retrieves the public URL using `sbx sandbox get-host`
@@ -87,7 +87,7 @@ SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
    - IMPORTANT: Be sure you run your final test from OUTSIDE the sandbox to validate the user's access to the application.
 
 5. **Final Testing & Validation**
-   - Run `\agent-sandboxes:test [sandbox_id] [public_url] [path_to_plan] [WORKFLOW_ID]`
+   - Run `/agent-sandboxes:test [sandbox_id] [public_url] [path_to_plan] [WORKFLOW_ID]`
    - This performs comprehensive validation of database, API routes (internal + external), pages, end-to-end integration, and browser UI testing
    - Browser UI Testing executes all user story workflows from the plan's `### 6. Browser UI Testing` section
    - CRITICAL: All tests must pass before proceeding to report
