@@ -5,8 +5,7 @@ Follow the `Workflow` to understand the codebase and instructions then report yo
 ## Workflow
 
 @README.md
-@.claude/skills/agent-sandboxes/SKILL.md
-@.claude/skills/playwright/SKILL.md
+@.claude/skills/*/SKILL.md
 @.claude/commands/workflow/
 !`git ls-files`
 
