@@ -94,7 +94,6 @@ uv run sbx git clone <sandbox_id> https://github.com/user/repo.git
 | `sbx files` | File operations (ls, read, write, upload, download) |
 | `sbx sandbox` | Lifecycle management (info, kill, pause, get-host) |
 | `sbx git` | Git operations with auto-auth |
-| `sbx browser` | Browser automation via Playwright |
 
 ## Sandbox Templates
 

@@ -19,7 +19,6 @@ load_dotenv(root_dir / ".env")
 from .commands.sandbox import sandbox
 from .commands.files import files
 from .commands.exec import exec
-from .commands.browser import browser
 from .commands.git import git
 
 console = Console()
@@ -54,7 +53,6 @@ def cli():
 cli.add_command(sandbox)
 cli.add_command(files)
 cli.add_command(exec)
-cli.add_command(browser)
 cli.add_command(git)
 
 
