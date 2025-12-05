@@ -230,9 +230,8 @@ uv run sbx exec <sandbox_id> "git log --oneline -5" --cwd /home/user/repo
 
 1. **Capture the sandbox ID** from `sbx init` output and remember it in your context
 2. **DO NOT use shell variables** like `export SANDBOX_ID=...` (conflicts with other agents)
-3. **DO NOT rely on `.sandbox_id` file** (gets overwritten by other agents)
-4. **Track the sandbox ID yourself** and use it directly in all subsequent commands
-5. **Report the sandbox ID** to the user when done
+3. **Track the sandbox ID yourself** and use it directly in all subsequent commands
+4. **Report the sandbox ID** to the user when done
 
 **Example of proper ID handling**:
 ```bash
