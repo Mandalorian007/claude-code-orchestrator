@@ -158,17 +158,16 @@ uv run sbx git clone <sandbox_id> <url> [options]
 
 Options:
   --branch, -b    Branch to clone
-  --depth, -d     Shallow clone depth (faster)
   --path, -p      Target directory (default: /home/user)
 ```
 
 **Examples**:
 ```bash
-# Clone a private repo (GH_TOKEN auto-injected)
+# Clone a repo (GH_TOKEN auto-injected)
 uv run sbx git clone <sandbox_id> https://github.com/myorg/private-repo.git
 
-# Clone specific branch with shallow depth
-uv run sbx git clone <sandbox_id> https://github.com/user/repo.git --branch main --depth 1
+# Clone specific branch
+uv run sbx git clone <sandbox_id> https://github.com/user/repo.git --branch main
 
 # Clone into specific directory
 uv run sbx git clone <sandbox_id> https://github.com/user/repo.git --path /home/user/projects

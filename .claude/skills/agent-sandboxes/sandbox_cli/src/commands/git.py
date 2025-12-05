@@ -65,9 +65,8 @@ def git():
 @click.argument("sandbox_id")
 @click.argument("url")
 @click.option("--branch", "-b", default=None, help="Branch to clone")
-@click.option("--depth", "-d", default=None, type=int, help="Shallow clone depth")
 @click.option("--path", "-p", default="/home/user", help="Target directory")
-def clone(sandbox_id, url, branch, depth, path):
+def clone(sandbox_id, url, branch, path):
     """Clone a repository.
 
     Automatically injects GH_TOKEN for GitHub URLs.
@@ -75,14 +74,12 @@ def clone(sandbox_id, url, branch, depth, path):
 
     Examples:
         sbx git clone abc123 https://github.com/user/repo.git
-        sbx git clone abc123 https://github.com/user/repo.git --branch main --depth 1
+        sbx git clone abc123 https://github.com/user/repo.git --branch main
     """
     # Use -c credential.helper= to disable interactive prompts (fails in sandbox)
     cmd = ["git", "-c", "credential.helper=", "clone"]
     if branch:
         cmd.extend(["-b", branch])
-    if depth:
-        cmd.extend(["--depth", str(depth)])
     cmd.append(_auth_url(url))
 
     console.print(f"[yellow]Cloning {url}...[/yellow]")
