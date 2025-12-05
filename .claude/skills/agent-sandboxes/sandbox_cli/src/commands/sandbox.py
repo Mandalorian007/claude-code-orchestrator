@@ -56,8 +56,7 @@ def create(template, timeout, env, metadata, auto_pause):
         if auto_pause:
             console.print("[dim]Auto-pause: enabled[/dim]")
 
-        # Important: save the sandbox_id for the user
-        console.print(f"\n[cyan]Export for reuse:[/cyan] export SANDBOX_ID={sbx.sandbox_id}")
+        console.print(f"\n[cyan]Sandbox ID:[/cyan] {sbx.sandbox_id}")
 
     except Exception as e:
         console.print(f"[red]✗ Error: {e}[/red]")
