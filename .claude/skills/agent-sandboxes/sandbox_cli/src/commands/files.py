@@ -12,7 +12,30 @@ console = Console()
 
 @click.group()
 def files():
-    """File system operations."""
+    """
+    File system operations in sandbox.
+
+    \b
+    EXAMPLES
+    --------
+    # Write and read
+    uv run sbx files write <id> /home/user/app.py "print('hello')"
+    uv run sbx files read <id> /home/user/app.py
+
+    # Special characters (use --stdin)
+    echo 'const arr = [1, 2];' | uv run sbx files write <id> /home/user/app.js --stdin
+
+    # Find and replace
+    uv run sbx files edit <id> /home/user/config.ts --old "localhost" --new "0.0.0.0"
+
+    # Binary files (use upload/download)
+    uv run sbx files upload <id> ./image.png /home/user/image.png
+    uv run sbx files download <id> /home/user/output.pdf ./output.pdf
+
+    # Directories
+    uv run sbx files ls <id> /home/user/project
+    uv run sbx files download-dir <id> /home/user/project ./local-copy
+    """
     pass
 
 

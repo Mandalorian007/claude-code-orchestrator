@@ -13,7 +13,19 @@ console = Console()
 
 @click.group()
 def sandbox():
-    """Sandbox lifecycle management commands."""
+    """
+    Sandbox lifecycle management.
+
+    \b
+    EXAMPLES
+    --------
+    uv run sbx sandbox get-host <id> --port 3000   # Get public URL (CRITICAL)
+    uv run sbx sandbox info <id>                   # Status and resources
+    uv run sbx sandbox extend-lifetime <id> 7200   # Add 2 hours
+    uv run sbx sandbox list                        # List all sandboxes
+    uv run sbx sandbox pause <id>                  # Pause (beta)
+    uv run sbx sandbox connect <id>                # Resume paused
+    """
     pass
 
 
@@ -300,7 +312,27 @@ def status(sandbox_id):
 @click.argument("sandbox_id")
 @click.option("--port", "-p", required=True, type=int, help="Port number to expose (e.g., 3000 for Next.js)")
 def get_host(sandbox_id, port):
-    """Get public hostname for an exposed port."""
+    """
+    Get public URL for an exposed port.
+
+    \b
+    IMPORTANT: Always use this command. Never construct URLs manually.
+    Server must listen on 0.0.0.0 (use --hostname 0.0.0.0 when starting).
+
+    \b
+    EXAMPLES
+    --------
+    uv run sbx sandbox get-host <id> --port 3000   # Next.js
+    uv run sbx sandbox get-host <id> --port 8000   # FastAPI
+    uv run sbx sandbox get-host <id> --port 5173   # Vite
+
+    \b
+    FULL WORKFLOW
+    -------------
+    uv run sbx exec <id> "pnpm dev --hostname 0.0.0.0" --background
+    uv run sbx sandbox get-host <id> --port 3000
+    # Returns: https://3000-<id>.e2b.app
+    """
     try:
         console.print(f"[yellow]Getting public host for port {port}...[/yellow]")
 

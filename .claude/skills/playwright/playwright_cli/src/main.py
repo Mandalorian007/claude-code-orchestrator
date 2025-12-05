@@ -491,15 +491,37 @@ def cli():
     """
     Playwright CLI - Browser automation from the command line.
 
-    \b
-    Workflow:
-        1. pw init              # One-time setup
-        2. pw start             # Start browser
-        3. pw nav <url>         # Navigate
-        4. pw screenshot        # Capture
-        5. pw close             # Cleanup
+    Uses Playwright's Chromium - does not affect your Chrome browser.
 
-    Use --port for parallel sessions (e.g., --port 9223).
+    \b
+    USAGE
+    -----
+    cd .claude/skills/playwright/playwright_cli/
+    uv run pw <command> [args]
+
+    \b
+    EXAMPLES
+    --------
+    # Basic workflow
+    uv run pw init                        # One-time setup
+    uv run pw start
+    uv run pw nav https://example.com
+    uv run pw screenshot --path ./page.png
+    uv run pw close
+
+    # Form testing
+    uv run pw type "#email" "test@example.com"
+    uv run pw click "#submit"
+
+    # Data extraction
+    uv run pw eval "document.title"
+    uv run pw a11y
+
+    # Mobile / parallel
+    uv run pw start --mobile
+    uv run pw start --port 9223
+
+    Run 'uv run pw <command> --help' for detailed usage.
     """
     pass
 

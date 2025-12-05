@@ -29,23 +29,23 @@ console = Console()
 @click.version_option(version="0.1.0")
 def cli():
     """
-    E2B Sandbox CLI - Control sandboxes from the command line.
+    E2B Sandbox CLI - Isolated code execution environments.
 
-    This CLI provides comprehensive sandbox management capabilities:
-    - Create, connect to, and manage sandboxes (sandbox)
-    - Perform file operations with SDK APIs (files)
-    - Execute any command with full control (exec)
-    - Browser automation for UI validation (browser)
-    - Git operations with automatic auth (git)
+    \b
+    USAGE
+    -----
+    cd .claude/skills/agent-sandboxes/sandbox_cli/
+    uv run sbx <command> [args]
 
-    Most commands require a SANDBOX_ID. You can get one by:
-    1. Creating a new sandbox: sbx init
-    2. Or: sbx sandbox create
+    \b
+    RULES
+    -----
+    1. Capture sandbox ID in your context (not shell variables)
+    2. Use 'sandbox get-host' for URLs - never construct manually
+    3. Default timeout: 1 hour
+    4. GH_TOKEN from .env provides automatic GitHub auth
 
-    Tip: For multi-agent workflows, capture the sandbox ID in your context
-    and use it directly in commands (avoid shell variables for safety).
-
-    Git: GH_TOKEN from .env provides automatic GitHub authentication.
+    Run 'uv run sbx <command> --help' for usage and examples.
     """
     pass
 
@@ -73,17 +73,39 @@ cli.add_command(git)
 @click.option("--name", "-n", default=None, help="Sandbox name (stored in metadata)")
 def init(template, timeout, env, name):
     """
-    Initialize a new sandbox and display the ID.
+    Create a new sandbox and display the ID.
 
-    Creates a new sandbox and outputs the sandbox ID. Capture the ID
-    from the output and store it in your context for subsequent commands.
+    \b
+    IMPORTANT: Capture the sandbox ID from output. Do NOT use shell variables.
 
-    Templates:
-        Use --template to specify a pre-built template with tools installed.
+    \b
+    TEMPLATES
+    ---------
+    fullstack-app-template-lite      2 vCPU, 4GB (default)
+    fullstack-app-template-standard  4 vCPU, 4GB
+    fullstack-app-template-heavy     4 vCPU, 8GB
+    fullstack-app-template-max       8 vCPU, 8GB
 
-    Examples:
-        sbx init
-        sbx init --template fullstack-app-template --name my-workflow
+    \b
+    EXAMPLES
+    --------
+    # Basic
+    uv run sbx init
+
+    # With template
+    uv run sbx init --template fullstack-app-template-standard
+
+    # With options
+    uv run sbx init --timeout 7200 --name my-project
+    uv run sbx init --env API_KEY=secret
+
+    \b
+    TYPICAL WORKFLOW
+    ----------------
+    uv run sbx init                              # Get sandbox ID
+    uv run sbx exec <id> "python --version"      # Run command
+    uv run sbx files write <id> /home/user/app.py "print('hi')"
+    uv run sbx exec <id> "python /home/user/app.py"
     """
     try:
         from .modules import sandbox as sbx_module

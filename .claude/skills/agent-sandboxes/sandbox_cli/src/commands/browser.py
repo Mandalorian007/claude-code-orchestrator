@@ -55,17 +55,31 @@ def ensure_initialized():
 @click.group()
 def browser():
     """
-    Browser automation tools for UI validation using Playwright's Chromium.
+    Browser automation for UI testing (runs locally, not in sandbox).
 
-    Workflow:
-        1. sbx browser init          # One-time setup
-        2. sbx browser start         # Start Playwright Chromium
-        3. sbx browser nav <url>     # Navigate to your app
-        4. sbx browser screenshot    # Take screenshot
-        5. sbx browser eval <js>     # Run JavaScript checks
-        6. sbx browser close         # Close browser
+    Uses Playwright's Chromium - does not affect your Chrome browser.
 
-    Use --port for parallel agents (e.g., --port 9223).
+    \b
+    EXAMPLES
+    --------
+    # Basic workflow
+    uv run sbx browser init              # One-time setup
+    uv run sbx browser start
+    uv run sbx browser nav https://3000-<id>.e2b.app
+    uv run sbx browser screenshot --path ./page.png
+    uv run sbx browser close
+
+    # Form interaction
+    uv run sbx browser type "#username" "testuser"
+    uv run sbx browser click "#submit"
+
+    # Data extraction
+    uv run sbx browser eval "document.title"
+    uv run sbx browser a11y
+
+    # Parallel agents (unique ports)
+    uv run sbx browser start --port 9223
+    uv run sbx browser close --port 9223
     """
     pass
 

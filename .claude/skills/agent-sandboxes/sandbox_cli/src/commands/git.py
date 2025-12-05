@@ -57,7 +57,25 @@ def _auth_url(url: str) -> str:
 
 @click.group()
 def git():
-    """Git operations (GH_TOKEN auth automatic)."""
+    """
+    Git operations with automatic GitHub authentication.
+
+    GH_TOKEN from .env is automatically injected into GitHub URLs.
+
+    \b
+    EXAMPLES
+    --------
+    uv run sbx git clone <id> https://github.com/user/repo.git
+    uv run sbx git clone <id> https://github.com/user/repo.git --branch main
+    uv run sbx git push <id> --path /home/user/repo -u
+    uv run sbx git pr <id> "Fix bug" --path /home/user/repo
+
+    \b
+    OTHER GIT OPERATIONS (use exec)
+    -------------------------------
+    uv run sbx exec <id> "git status" --cwd /home/user/repo
+    uv run sbx exec <id> "git add . && git commit -m 'msg'" --cwd /home/user/repo --shell
+    """
     pass
 
 
