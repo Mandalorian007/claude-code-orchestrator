@@ -42,7 +42,7 @@ Before using sandbox operations, **validate the environment**:
 ## Instructions
 
 - IMPORTANT: **Don't create files locally**, always use the sandbox. Only do this if the user explicitly asks you to do so.
-- **ALWAYS USE --timeout TIMEOUT_DURATION_IN_SECONDS**
+- **Timeout defaults to 1 hour** - Use `--timeout` only if you need a different duration
 - **CAPTURE AND REMEMBER SANDBOX ID** - Store it in your context, don't use shell variables or files
 - **Multi-agent safe** - Each agent tracks its own sandbox ID independently
 - **Always validate E2B_API_KEY first** - Don't proceed without it
@@ -50,7 +50,7 @@ Before using sandbox operations, **validate the environment**:
 - **Use --shell for complex commands** - Enables pipes, redirections, wildcards
 - **Use --cwd instead of cd** - More reliable for working directory changes
 - **Binary files** - Use `upload`/`download` for images, PDFs, executables
-- **Never delete the sandbox unless you're explicitly asked to do so** - Sandboxes auto-timeout after TIMEOUT_DURATION_IN_SECONDS
+- **Never delete the sandbox unless you're explicitly asked to do so** - Sandboxes auto-timeout after 1 hour by default
 
 ### Template Tiers
 
@@ -221,12 +221,11 @@ uv run sbx exec <sandbox_id> "git log --oneline -5" --cwd /home/user/repo
 
 **CRITICAL**: Multiple agents may be running sandboxes simultaneously. Each agent MUST:
 
-1. **Always use `--timeout TIMEOUT_DURATION_IN_SECONDS`** when initializing (unless the user specifies a different timeout)
-2. **Capture the sandbox ID** from `sbx init` output and remember it in your context
-3. **DO NOT use shell variables** like `export SANDBOX_ID=...` (conflicts with other agents)
-4. **DO NOT rely on `.sandbox_id` file** (gets overwritten by other agents)
-5. **Track the sandbox ID yourself** and use it directly in all subsequent commands
-6. **Report the sandbox ID** to the user when done
+1. **Capture the sandbox ID** from `sbx init` output and remember it in your context
+2. **DO NOT use shell variables** like `export SANDBOX_ID=...` (conflicts with other agents)
+3. **DO NOT rely on `.sandbox_id` file** (gets overwritten by other agents)
+4. **Track the sandbox ID yourself** and use it directly in all subsequent commands
+5. **Report the sandbox ID** to the user when done
 
 **Example of proper ID handling**:
 ```bash
@@ -269,23 +268,23 @@ Create a new sandbox and **capture the sandbox ID from the output**:
 
 ```bash
 cd SANDBOX_CLI_PATH
-uv run sbx init --timeout TIMEOUT_DURATION_IN_SECONDS
+uv run sbx init
 ```
 
 **CRITICAL**:
-- **Always use `--timeout TIMEOUT_DURATION_IN_SECONDS`**
 - The command will output a sandbox ID (e.g., `sbx_abc123def456`)
 - **Capture this ID** and remember it in your context
 - **DO NOT use environment variables** or files to store it
 - **Use this exact ID** in all subsequent commands
 
-Additional options (optional):
+Options:
 - `--template NAME` - Use a specific template (default: base)
+- `--timeout SECONDS` - Override default 1-hour timeout
 - `--env KEY=VALUE` - Set environment variables
 
 Example:
 ```bash
-uv run sbx init --timeout TIMEOUT_DURATION_IN_SECONDS
+uv run sbx init
 # Output: Created sandbox: sbx_abc123def456
 # YOU remember: sandbox_id = "sbx_abc123def456"
 ```
@@ -423,7 +422,7 @@ curl https://3000-<sandbox_id>.e2b.app
 **Important**:
 - The server must listen on `0.0.0.0` (not `localhost` or `127.0.0.1`)
 - Port must match between server and frontend configuration
-- The sandbox will remain alive until TIMEOUT_DURATION_IN_SECONDS
+- The sandbox will remain alive for 1 hour by default (use `extend-lifetime` to add more time)
 
 ### Pausing, Resuming, and Extending Sandboxes
 
@@ -476,7 +475,7 @@ This returns the actual URL (e.g., `https://3000-<sandbox_id>.e2b.app`).
 Provide the user with:
 1. **The sandbox ID** - So they can reference it if needed
 2. **The URL** (if applicable) - So they can access the application
-3. **Timeout information** - Let them know the sandbox timeout (TIMEOUT_DURATION_IN_SECONDS)
+3. **Timeout information** - Let them know the sandbox will auto-terminate after 1 hour (default)
 
 Example report:
 ```
@@ -485,14 +484,14 @@ Example report:
 Sandbox ID: sbx_abc123def456
 Application URL: [Use: uv run sbx sandbox get-host sbx_abc123def456 --port 3000]
 
-Your sandbox will automatically terminate after TIMEOUT_DURATION_IN_SECONDS.
+Your sandbox will automatically terminate after 1 hour.
 ```
 
 **Note**: Always get the actual URL using `sbx sandbox get-host <sandbox_id> --port 3000` - never construct it manually.
 
 **IMPORTANT**:
 - **Never delete the sandbox unless you're explicitly asked to do so**
-- Sandboxes will automatically timeout after TIMEOUT_DURATION_IN_SECONDS
+- Sandboxes will automatically timeout after 1 hour by default
 
 ## Examples
 
