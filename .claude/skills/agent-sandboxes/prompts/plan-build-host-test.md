@@ -16,11 +16,12 @@ UI_LIBRARY: `shadcn/ui tailwindcss` (static default)
 DATABASE: `sqlite better-sqlite3` (static default)
 TEMPLATE_NAME: `fullstack-app-template` (pre-built E2B template)
 PORT: 3000
-SANDBOX_CLI_PATH: `temp/<WORKFLOW_ID>/`
+SANDBOX_CLI_PATH: `.claude/skills/agent-sandboxes/sandbox_cli/`
+WORKFLOW_OUTPUT_PATH: `temp/<WORKFLOW_ID>/`
 
 ## Instructions
 
-- If you ever need to work files locally, always use your `SANDBOX_CLI_PATH` directory. NEVER create files outside of this directory.
+- If you ever need to work files locally, always use your `WORKFLOW_OUTPUT_PATH` directory. NEVER create files outside of this directory.
 - You're free to read out of the local `ai_docs/` and `.env` (if you need an API key) directory if explicitly referenced in the user prompt.
 - If you need an API key, cp the `.env` into sandbox (upload it) where you need it (likely the server).
 - This is a sequential workflow that must be executed from top to bottom without stopping

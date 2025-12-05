@@ -107,7 +107,7 @@ def kill(sandbox_id):
 
 def _build_default_public_url(sandbox_id: str, port: int = 3000) -> str:
     """Build the default public URL for a sandbox."""
-    return f"https://{port}-{sandbox_id}.e2b.dev"
+    return f"https://{port}-{sandbox_id}.e2b.app"
 
 
 @sandbox.command()

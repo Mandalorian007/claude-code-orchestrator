@@ -1,5 +1,4 @@
 ---
-model: claude-sonnet-4-5-20250929
 description: Validate full-stack Next.js application (database, API routes, pages, integration) both internally and externally
 argument-hint: [sandbox_id] [public_url] [plan_file_path] [workflow_id]
 ---
@@ -14,7 +13,7 @@ SANDBOX_ID: $1
 PUBLIC_URL: $2
 PLAN_FILE_PATH: $3
 WORKFLOW_ID: $4
-BROWSER_UI_TESTING_SCREENSHOT_PATH: `/temp/<WORKFLOW_ID>/ui-testing/`
+BROWSER_UI_TESTING_SCREENSHOT_PATH: `temp/<WORKFLOW_ID>/ui-testing/`
 
 ## Instructions
 

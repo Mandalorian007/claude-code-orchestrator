@@ -1,5 +1,4 @@
 ---
-model: claude-sonnet-4-5-20250929
 description: Execute browser automation tasks against a URL using Playwright
 argument-hint: [url] [prompt]
 ---
