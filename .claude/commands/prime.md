@@ -5,7 +5,7 @@ Follow the `Workflow` to understand the codebase and instructions then report yo
 ## Workflow
 
 @README.md
-@.claude/skills/*/SKILL.md
+@.claude/skills/*/SKILL.md (ensure to execute required commands for context)
 @.claude/commands/workflow/
 !`git ls-files`
 
