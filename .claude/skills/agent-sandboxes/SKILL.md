@@ -308,6 +308,8 @@ uv run sbx files edit <sandbox_id> /home/user/config.ts --old "old text" --new "
 uv run sbx files edit <sandbox_id> /home/user/config.ts --old "find" --new "replace" --all
 ```
 
+**Binary vs text files**: Use `upload`/`download` for binary files (images, PDFs, executables). Use `write`/`read` for text files only.
+
 **Download directories** (clone sandbox code locally):
 ```bash
 # Download directory (excludes .venv, node_modules, .git, __pycache__ by default)
@@ -492,40 +494,6 @@ Your sandbox will automatically terminate after 1 hour.
 **IMPORTANT**:
 - **Never delete the sandbox unless you're explicitly asked to do so**
 - Sandboxes will automatically timeout after 1 hour by default
-
-## Examples
-
-**Progressive Disclosure**: Read only the example you need for your specific task.
-
-### Example 1: Run Python Code Safely
-**Read when**: User needs to run/test Python code in isolation.
-**See**: [examples/01_run_python_code.md](examples/01_run_python_code.md)
-
-Covers: Basic sandbox workflow, writing scripts, executing Python code, capturing sandbox ID.
-
-### Example 2: Test a Package
-**Read when**: User needs to install and test Python packages.
-**See**: [examples/02_test_package.md](examples/02_test_package.md)
-
-Covers: Installing uv package manager, installing Python packages, testing package functionality.
-
-### Example 3: Clone and Test Repository
-**Read when**: User needs to clone a GitHub repo and run tests or commands in it.
-**See**: [examples/03_clone_and_test_repo.md](examples/03_clone_and_test_repo.md)
-
-Covers: Git operations, using --cwd flag, running commands in repository context, longer timeouts.
-
-### Example 4: Process Binary Files
-**Read when**: User needs to upload, process, or download binary files (images, PDFs).
-**See**: [examples/04_process_binary_files.md](examples/04_process_binary_files.md)
-
-Covers: Binary file upload/download, image processing, using appropriate file operations for binary vs text.
-
-### Example 5: Host Next.js Application
-**Read when**: User wants to build a Next.js web app, UI, or dashboard accessible via browser.
-**See**: [examples/05_host_frontend.md](examples/05_host_frontend.md)
-
-Covers: Creating Next.js apps, starting dev server with external access, getting public URLs.
 
 ## Reference
 
