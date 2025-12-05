@@ -97,8 +97,7 @@ def build_template(tier: str, list_tiers: bool):
         Template()
         .from_node_image("22")  # Start with Node.js 22 base image (globally available)
         .apt_install(["sqlite3"])  # Install SQLite3 CLI for database operations
-        .run_cmd("corepack enable")  # Enable corepack (ships with Node.js 16.13+)
-        .run_cmd("corepack prepare pnpm@latest --activate")  # Install and activate pnpm
+        .npm_install("pnpm", g=True)  # Install pnpm globally via npm
         # Verify tools are installed correctly
         .run_cmd("node --version && pnpm --version && sqlite3 --version")
     )
