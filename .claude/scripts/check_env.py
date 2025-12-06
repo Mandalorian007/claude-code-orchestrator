@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # /// script
 # requires-python = ">=3.12"
+# dependencies = ["python-dotenv>=1.1.2"]
 # ///
 """
 Check that required environment variables are set in .env file.
@@ -9,9 +10,14 @@ Verifies E2B_API_KEY and GH_TOKEN are present and have values.
 
 Usage:
     uv run .claude/scripts/check_env.py
+
+Note: Uses python-dotenv >= 1.1.2 for compatibility with 1Password Environments
+      (local .env files mounted as named pipes).
 """
 
 from pathlib import Path
+
+from dotenv import dotenv_values
 
 
 def main():
@@ -28,19 +34,11 @@ def main():
         print(f"\nCreate it with: cp .env.sample .env")
         return
 
-    content = env_file.read_text()
-    lines = content.splitlines()
+    # Use python-dotenv which supports 1Password Environment FIFO mounts
+    env_vars = dotenv_values(env_file)
 
     for key in required:
-        value = None
-        for line in lines:
-            line = line.strip()
-            if line.startswith("#") or "=" not in line:
-                continue
-            k, _, v = line.partition("=")
-            if k.strip() == key:
-                value = v.strip().strip('"').strip("'")
-                break
+        value = env_vars.get(key)
 
         if value:
             # Mask the value for display

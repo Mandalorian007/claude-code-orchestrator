@@ -7,7 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "e2b>=2.6.4",
     "click>=8.1.7",
-    "python-dotenv>=1.0.0",
+    "python-dotenv>=1.1.2",  # 1.1.2+ required for 1Password Environments FIFO support
     "rich>=13.7.0",
 ]
 
