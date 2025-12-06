@@ -5,7 +5,7 @@
 .env.*.local
 
 # Env files for sandbox projects (contains secrets)
-envs/
+envs/*
 !envs/.gitkeep
 *.pyc
 *.pyo

@@ -1,0 +1,4 @@
+# This directory stores environment files for sandbox projects.
+# Structure mirrors the sandbox: envs/<repo-name>/.env → /home/user/<repo-name>/.env
+#
+# IMPORTANT: Add envs/ to .gitignore to protect secrets!
