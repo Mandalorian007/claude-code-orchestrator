@@ -1,5 +1,6 @@
 # Environment Variables
 .env
+.env.bk
 .env.local
 .env.*.local
 *.pyc
