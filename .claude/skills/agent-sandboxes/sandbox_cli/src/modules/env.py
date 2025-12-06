@@ -1,10 +1,33 @@
 """
 Environment file sync module.
 Handles syncing .env files between local envs/ folder and sandbox.
+
+1Password Environments Compatibility
+-------------------------------------
+This module supports 1Password Environments, which mounts .env files as UNIX
+named pipes (FIFOs) rather than regular files. Key considerations:
+
+1. Detection: Use is_readable_env_path() instead of Path.is_file(), since
+   FIFOs return False for is_file().
+
+2. Reading: FIFOs require special handling:
+   - For parsed key-values: use read_env_file_vars() (python-dotenv >= 1.1.2)
+   - For raw content: use read_env_file_content() (subprocess cat)
+
+3. Single-read behavior: 1Password FIFOs can only be read ONCE per authorization
+   cycle. After reading, the data is consumed until 1Password re-authorizes.
+   This is why push (needs raw content) and diff (needs parsed vars) use
+   separate read functions - they're different commands, never called together
+   on the same file in the same invocation.
+
+See: https://developer.1password.com/docs/environments/local-env-file
 """
 
+import subprocess
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List
+
+from dotenv import dotenv_values
 from e2b import Sandbox
 
 
@@ -75,9 +98,69 @@ def parse_env_file(content: str) -> Dict[str, str]:
     return env_vars
 
 
+def is_readable_env_path(path: Path) -> bool:
+    """
+    Check if a path is a readable env file (regular file or FIFO).
+
+    1Password Environments mounts .env files as FIFOs (named pipes),
+    which return False for is_file(). We need to check for both.
+
+    Args:
+        path: Path to check
+
+    Returns:
+        True if path exists and is readable (file or FIFO)
+    """
+    return path.exists() and (path.is_file() or path.is_fifo())
+
+
+def read_env_file_content(path: Path) -> str:
+    """
+    Read raw content from an env file, supporting both regular files and FIFOs.
+
+    1Password Environments mounts .env files as FIFOs. Standard Python file I/O
+    doesn't work with these - we use subprocess to read via cat.
+
+    Args:
+        path: Path to the env file
+
+    Returns:
+        Raw file content as string
+    """
+    # Use cat for both regular files and FIFOs - works universally
+    # and handles 1Password Environments properly
+    result = subprocess.run(
+        ["cat", str(path)],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"Failed to read {path}: {result.stderr}")
+    return result.stdout
+
+
+def read_env_file_vars(path: Path) -> Dict[str, str]:
+    """
+    Read and parse env file variables using python-dotenv.
+
+    This uses python-dotenv >= 1.1.2 which has native support for
+    1Password Environments FIFO mounts.
+
+    Args:
+        path: Path to the env file
+
+    Returns:
+        Dictionary of environment variable names to values
+    """
+    return dict(dotenv_values(path))
+
+
 def find_local_env_files(envs_dir: Path, project: str) -> List[Path]:
     """
     Find all .env* files in the local envs/<project>/ directory.
+
+    Supports both regular files and 1Password Environment FIFO mounts.
 
     Args:
         envs_dir: Path to the envs/ directory
@@ -92,7 +175,7 @@ def find_local_env_files(envs_dir: Path, project: str) -> List[Path]:
 
     env_files = []
     for path in project_dir.rglob("*"):
-        if path.is_file() and is_env_file(path.name):
+        if is_readable_env_path(path) and is_env_file(path.name):
             env_files.append(path)
     return env_files
 
@@ -176,8 +259,8 @@ def push_env_files(
             rel_path = local_path.relative_to(project_dir)
             remote_path = f"{SANDBOX_BASE_PATH}/{project}/{rel_path}"
 
-            # Read local file
-            content = local_path.read_text()
+            # Read local file (supports 1Password FIFO mounts)
+            content = read_env_file_content(local_path)
 
             # Ensure parent directory exists
             parent_dir = str(Path(remote_path).parent)
@@ -197,6 +280,11 @@ def push_env_files(
     return stats
 
 
+class FifoWriteError(Exception):
+    """Raised when attempting to write to a FIFO (named pipe) file."""
+    pass
+
+
 def pull_env_files(
     sandbox_id: str,
     envs_dir: Path,
@@ -212,6 +300,9 @@ def pull_env_files(
 
     Returns:
         Dictionary with pull statistics
+
+    Raises:
+        FifoWriteError: If a target local file is a FIFO (e.g., 1Password mount)
     """
     sbx = Sandbox.connect(sandbox_id)
     project_dir = envs_dir / project
@@ -221,6 +312,7 @@ def pull_env_files(
         "files_pulled": 0,
         "files": [],
         "errors": [],
+        "fifo_files": [],  # Track FIFO files that couldn't be written
     }
 
     # Find env files in sandbox
@@ -231,6 +323,11 @@ def pull_env_files(
             # Calculate relative path from project root
             rel_path = remote_path[len(full_sandbox_path):].lstrip("/")
             local_path = project_dir / rel_path
+
+            # Check if target is a FIFO (1Password Environment mount)
+            if local_path.exists() and local_path.is_fifo():
+                stats["fifo_files"].append(rel_path)
+                continue
 
             # Read from sandbox
             content = sbx.files.read(remote_path)
@@ -245,6 +342,10 @@ def pull_env_files(
 
         except Exception as e:
             stats["errors"].append(f"{remote_path}: {e}")
+
+    # Raise error if any FIFO files were encountered
+    if stats["fifo_files"]:
+        raise FifoWriteError(stats["fifo_files"])
 
     return stats
 
@@ -314,7 +415,7 @@ def diff_env_files(
         if local_path and not remote_path:
             # File only exists locally
             file_diff["status"] = "only_local"
-            local_vars = parse_env_file(local_path.read_text())
+            local_vars = read_env_file_vars(local_path)
             file_diff["removed"] = list(local_vars.keys())
             results["summary"]["files_only_local"] += 1
 
@@ -331,7 +432,7 @@ def diff_env_files(
 
         else:
             # File exists in both - compare keys
-            local_vars = parse_env_file(local_path.read_text())
+            local_vars = read_env_file_vars(local_path)
             try:
                 remote_content = sbx.files.read(remote_path)
                 remote_vars = parse_env_file(remote_content)

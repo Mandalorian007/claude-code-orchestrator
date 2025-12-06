@@ -133,6 +133,21 @@ def pull(sandbox_id, project):
             for err in stats["errors"]:
                 console.print(f"  [red]✗ {err}[/red]")
 
+    except env_module.FifoWriteError as e:
+        fifo_files = e.args[0]
+        console.print(f"\n[red]✗ Cannot write to FIFO file(s):[/red]")
+        for f in fifo_files:
+            console.print(f"  [red]• envs/{project}/{f}[/red]")
+        console.print()
+        console.print("[yellow]These files are managed by a password manager (e.g., 1Password Environments).[/yellow]")
+        console.print("[yellow]FIFO mounts are read-only streams and cannot be overwritten.[/yellow]")
+        console.print()
+        console.print("[dim]To update these values:[/dim]")
+        console.print(f"[dim]  1. Pull to a temp location:[/dim]")
+        console.print(f"[dim]     uv run sbx files read {sandbox_id} /home/user/{project}/.env > /tmp/{project}.env[/dim]")
+        console.print(f"[dim]  2. Update your password manager with the new values[/dim]")
+        console.print(f"[dim]  3. Re-authorize the FIFO mount if needed[/dim]")
+        raise click.Abort()
     except Exception as e:
         console.print(f"[red]✗ Error: {e}[/red]")
         raise click.Abort()
