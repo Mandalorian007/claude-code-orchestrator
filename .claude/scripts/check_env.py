@@ -19,7 +19,7 @@ def main():
     project_root = script_dir.parent.parent
     env_file = project_root / ".env"
 
-    required = ["E2B_API_KEY", "GH_TOKEN", "PERPLEXITY_API_KEY"]
+    required = ["E2B_API_KEY", "GH_TOKEN", "PERPLEXITY_API_KEY", "FIRECRAWL_API_KEY"]
     found = {}
     missing = []
 
