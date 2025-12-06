@@ -26,16 +26,18 @@ uv run sbx <command> --help        # Detailed usage
 - **Don't create files locally** - use the sandbox
 - **Never delete sandboxes** unless asked - they auto-timeout (1 hour)
 
+## Repo Environment Files
+
+Env files for sandbox projects are stored in `envs/<project>/`, mirroring the project structure. Use `uv run sbx env --help` for commands. The <project> is 
+the repo slug or the project directory name.
+
 ## Special Characters in Files
 
 Shell glob expansion breaks brackets `[]`. Use `--stdin`:
 ```bash
 echo 'const arr = [1, 2];' | uv run sbx files write <id> /path/file.js --stdin
-```  
+```
 
 ## Troubleshooting
-
-- **"E2B_API_KEY not found"**: Run `/prime` to validate environment
 - **"Command not found: sbx"**: Run from SANDBOX_CLI_PATH with `uv run sbx`
 - **"Permission denied"**: Use `--root` flag
-- **"Git auth failed"**: Verify GH_TOKEN in `.env`

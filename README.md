@@ -33,7 +33,9 @@ A skill toolkit for Claude Code to orchestrate development across repositories. 
    FIRECRAWL_API_KEY=fc-...      # https://firecrawl.dev/app/api-keys
    ```
 
-3. **Prime Claude Code** (run at the start of each session):
+3. **Project env files** (optional): Store project `.env` files in `envs/<repo>/` to sync with sandboxes. See Agent Sandboxes skill for details.
+
+4. **Prime Claude Code** (run at the start of each session):
    ```
    /prime
    ```

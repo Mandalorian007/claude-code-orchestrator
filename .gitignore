@@ -3,6 +3,10 @@
 .env.bk
 .env.local
 .env.*.local
+
+# Env files for sandbox projects (contains secrets)
+envs/
+!envs/.gitkeep
 *.pyc
 *.pyo
 *.pyd

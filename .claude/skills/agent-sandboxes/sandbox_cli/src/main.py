@@ -20,6 +20,7 @@ from .commands.sandbox import sandbox
 from .commands.files import files
 from .commands.exec import exec
 from .commands.git import git
+from .commands.env import env
 
 console = Console()
 
@@ -54,6 +55,7 @@ cli.add_command(sandbox)
 cli.add_command(files)
 cli.add_command(exec)
 cli.add_command(git)
+cli.add_command(env)
 
 
 # Add an init command for quick sandbox setup
