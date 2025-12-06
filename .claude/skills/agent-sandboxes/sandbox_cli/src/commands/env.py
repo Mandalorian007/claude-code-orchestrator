@@ -39,8 +39,7 @@ def env():
 @env.command()
 @click.argument("sandbox_id")
 @click.argument("project", metavar="PROJECT")
-@click.option("--sandbox-path", default="/home/user", help="Base path in sandbox")
-def push(sandbox_id, project, sandbox_path):
+def push(sandbox_id, project):
     """
     Push local env files to sandbox.
 
@@ -69,11 +68,9 @@ def push(sandbox_id, project, sandbox_path):
 
         console.print(f"[yellow]Pushing env files to sandbox...[/yellow]")
         console.print(f"[dim]Local: envs/{project}/[/dim]")
-        console.print(f"[dim]Remote: {sandbox_path}/{project}/[/dim]")
+        console.print(f"[dim]Remote: /home/user/{project}/[/dim]")
 
-        stats = env_module.push_env_files(
-            sandbox_id, envs_dir, project, sandbox_path
-        )
+        stats = env_module.push_env_files(sandbox_id, envs_dir, project)
 
         if stats["files_pushed"] > 0:
             console.print(f"\n[green]✓ Pushed {stats['files_pushed']} file(s)[/green]")
@@ -98,8 +95,7 @@ def push(sandbox_id, project, sandbox_path):
 @env.command()
 @click.argument("sandbox_id")
 @click.argument("project", metavar="PROJECT")
-@click.option("--sandbox-path", default="/home/user", help="Base path in sandbox")
-def pull(sandbox_id, project, sandbox_path):
+def pull(sandbox_id, project):
     """
     Pull env files from sandbox to local.
 
@@ -120,12 +116,10 @@ def pull(sandbox_id, project, sandbox_path):
         envs_dir = get_envs_dir()
 
         console.print(f"[yellow]Pulling env files from sandbox...[/yellow]")
-        console.print(f"[dim]Remote: {sandbox_path}/{project}/[/dim]")
+        console.print(f"[dim]Remote: /home/user/{project}/[/dim]")
         console.print(f"[dim]Local: envs/{project}/[/dim]")
 
-        stats = env_module.pull_env_files(
-            sandbox_id, envs_dir, project, sandbox_path
-        )
+        stats = env_module.pull_env_files(sandbox_id, envs_dir, project)
 
         if stats["files_pulled"] > 0:
             console.print(f"\n[green]✓ Pulled {stats['files_pulled']} file(s)[/green]")
@@ -147,8 +141,7 @@ def pull(sandbox_id, project, sandbox_path):
 @env.command()
 @click.argument("sandbox_id")
 @click.argument("project", metavar="PROJECT")
-@click.option("--sandbox-path", default="/home/user", help="Base path in sandbox")
-def diff(sandbox_id, project, sandbox_path):
+def diff(sandbox_id, project):
     """
     Compare env files between local and sandbox.
 
@@ -166,11 +159,9 @@ def diff(sandbox_id, project, sandbox_path):
 
         console.print(f"[yellow]Comparing env files...[/yellow]")
         console.print(f"[dim]Local: envs/{project}/[/dim]")
-        console.print(f"[dim]Remote: {sandbox_path}/{project}/[/dim]")
+        console.print(f"[dim]Remote: /home/user/{project}/[/dim]")
 
-        results = env_module.diff_env_files(
-            sandbox_id, envs_dir, project, sandbox_path
-        )
+        results = env_module.diff_env_files(sandbox_id, envs_dir, project)
 
         if not results["files"]:
             console.print(f"\n[yellow]No .env files found in either location[/yellow]")

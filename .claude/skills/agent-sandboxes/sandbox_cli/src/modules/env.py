@@ -8,6 +8,9 @@ from typing import Dict, List, Set, Tuple
 from e2b import Sandbox
 
 
+# Base path in sandbox where projects live
+SANDBOX_BASE_PATH = "/home/user"
+
 # Files to ignore when syncing (examples/templates, not real secrets)
 IGNORED_ENV_PATTERNS = {
     ".env.example",
@@ -141,7 +144,6 @@ def push_env_files(
     sandbox_id: str,
     envs_dir: Path,
     project: str,
-    sandbox_base_path: str = "/home/user",
 ) -> Dict:
     """
     Push local env files to sandbox.
@@ -150,7 +152,6 @@ def push_env_files(
         sandbox_id: The sandbox ID
         envs_dir: Path to the local envs/ directory
         project: Project directory name (repo slug or custom name)
-        sandbox_base_path: Base path in sandbox (default: /home/user)
 
     Returns:
         Dictionary with push statistics
@@ -173,7 +174,7 @@ def push_env_files(
         try:
             # Calculate relative path from project dir
             rel_path = local_path.relative_to(project_dir)
-            remote_path = f"{sandbox_base_path}/{project}/{rel_path}"
+            remote_path = f"{SANDBOX_BASE_PATH}/{project}/{rel_path}"
 
             # Read local file
             content = local_path.read_text()
@@ -200,7 +201,6 @@ def pull_env_files(
     sandbox_id: str,
     envs_dir: Path,
     project: str,
-    sandbox_base_path: str = "/home/user",
 ) -> Dict:
     """
     Pull env files from sandbox to local.
@@ -209,14 +209,13 @@ def pull_env_files(
         sandbox_id: The sandbox ID
         envs_dir: Path to the local envs/ directory
         project: Project directory name (repo slug or custom name)
-        sandbox_base_path: Base path in sandbox (default: /home/user)
 
     Returns:
         Dictionary with pull statistics
     """
     sbx = Sandbox.connect(sandbox_id)
     project_dir = envs_dir / project
-    full_sandbox_path = f"{sandbox_base_path}/{project}"
+    full_sandbox_path = f"{SANDBOX_BASE_PATH}/{project}"
 
     stats = {
         "files_pulled": 0,
@@ -254,7 +253,6 @@ def diff_env_files(
     sandbox_id: str,
     envs_dir: Path,
     project: str,
-    sandbox_base_path: str = "/home/user",
 ) -> Dict:
     """
     Compare env files between local and sandbox (keys only).
@@ -263,14 +261,13 @@ def diff_env_files(
         sandbox_id: The sandbox ID
         envs_dir: Path to the local envs/ directory
         project: Project directory name (repo slug or custom name)
-        sandbox_base_path: Base path in sandbox (default: /home/user)
 
     Returns:
         Dictionary with diff results per file
     """
     sbx = Sandbox.connect(sandbox_id)
     project_dir = envs_dir / project
-    full_sandbox_path = f"{sandbox_base_path}/{project}"
+    full_sandbox_path = f"{SANDBOX_BASE_PATH}/{project}"
 
     # Find all env files from both sources
     local_files = find_local_env_files(envs_dir, project)

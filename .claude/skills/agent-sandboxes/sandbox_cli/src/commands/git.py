@@ -61,20 +61,20 @@ def git():
     Git operations with automatic GitHub authentication.
 
     GH_TOKEN from .env is automatically injected into GitHub URLs.
+    All commands use PROJECT which maps to /home/user/<project>/
 
     \b
     EXAMPLES
     --------
-    uv run sbx git clone <id> https://github.com/user/repo.git
-    uv run sbx git clone <id> https://github.com/user/repo.git --branch main
-    uv run sbx git push <id> --path /home/user/repo -u
-    uv run sbx git pr <id> "Fix bug" --path /home/user/repo
+    uv run sbx git clone <id> https://github.com/user/my-repo.git
+    uv run sbx git push <id> my-repo -u
+    uv run sbx git pr <id> my-repo "Fix bug" "Description of the fix"
 
     \b
     OTHER GIT OPERATIONS (use exec)
     -------------------------------
-    uv run sbx exec <id> "git status" --cwd /home/user/repo
-    uv run sbx exec <id> "git add . && git commit -m 'msg'" --cwd /home/user/repo --shell
+    uv run sbx exec <id> "git status" --cwd /home/user/my-repo
+    uv run sbx exec <id> "git add . && git commit -m 'msg'" --cwd /home/user/my-repo --shell
     """
     pass
 
@@ -168,16 +168,20 @@ def _set_auth_remote(sandbox_id: str, path: str) -> bool:
 
 @git.command()
 @click.argument("sandbox_id")
-@click.option("--path", "-p", default="/home/user/project", help="Repository path")
+@click.argument("project", metavar="PROJECT")
 @click.option("--branch", "-b", default=None, help="Branch to push (default: current)")
 @click.option("--set-upstream", "-u", is_flag=True, help="Set upstream for new branch")
-def push(sandbox_id, path, branch, set_upstream):
+def push(sandbox_id, project, branch, set_upstream):
     """Push commits to remote.
 
+    PROJECT is the repo slug (e.g., my-repo from github.com/user/my-repo).
+    Maps to /home/user/<project>/
+
     Examples:
-        sbx git push abc123 --path /home/user/repo
-        sbx git push abc123 --path /home/user/repo --branch feature-x -u
+        sbx git push abc123 my-repo
+        sbx git push abc123 my-repo --branch feature-x -u
     """
+    path = f"/home/user/{project}"
     _set_auth_remote(sandbox_id, path)
 
     cmd = ["git", "push"]
@@ -209,17 +213,20 @@ def push(sandbox_id, path, branch, set_upstream):
 
 @git.command()
 @click.argument("sandbox_id")
+@click.argument("project", metavar="PROJECT")
 @click.argument("title")
-@click.option("--body", "-b", default="", help="PR description")
-@click.option("--path", "-p", default="/home/user/project", help="Repository path")
+@click.argument("description")
 @click.option("--base", default="main", help="Base branch (default: main)")
-def pr(sandbox_id, title, body, path, base):
+def pr(sandbox_id, project, title, description, base):
     """Create a pull request.
 
+    PROJECT is the repo slug (e.g., my-repo from github.com/user/my-repo).
+    Maps to /home/user/<project>/
+
     Examples:
-        sbx git pr abc123 "Fix bug" --path /home/user/repo
-        sbx git pr abc123 "Add feature" --body "Detailed description" --base main
+        sbx git pr abc123 my-repo "Fix bug" "Detailed description of the fix"
     """
+    path = f"/home/user/{project}"
     import base64
 
     # Get current branch
@@ -252,7 +259,7 @@ def pr(sandbox_id, title, body, path, base):
     # Build JSON payload and base64 encode to avoid shell escaping issues
     pr_data = json.dumps({
         "title": title,
-        "body": body,
+        "body": description,
         "head": head_branch,
         "base": base,
     })
